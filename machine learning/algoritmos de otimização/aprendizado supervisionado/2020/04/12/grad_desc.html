@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>O que é “Gradient Descent” (GD)? | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="O que é “Gradient Descent” (GD)?" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Como que a máquina aprende" />
+<meta property="og:description" content="Como que a máquina aprende" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-12T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Como que a máquina aprende","@type":"BlogPosting","headline":"O que é “Gradient Descent” (GD)?","dateModified":"2020-04-12T00:00:00-05:00","datePublished":"2020-04-12T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/inteligencia-superficial/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" /><link rel="shortcut icon" type="image/x-icon" href="/inteligencia-superficial/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>O que é “Gradient Descent” (GD)? | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="O que é “Gradient Descent” (GD)?" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Como que a máquina aprende" />
+<meta property="og:description" content="Como que a máquina aprende" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-12T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Como que a máquina aprende","@type":"BlogPosting","headline":"O que é “Gradient Descent” (GD)?","dateModified":"2020-04-12T00:00:00-05:00","datePublished":"2020-04-12T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><div class="wrapper-masthead">
+  <div class="container">
+    <header class="masthead clearfix"><a href="/inteligencia-superficial/" class="site-avatar"><img src="/inteligencia-superficial/images/avatar.png" /></a><div class="site-info"><h1 class="header-title"><a class="site-title" rel="author site-title-h1" href="/inteligencia-superficial/">Inteligência Superficial</a>
+        </h1>
+        <p class="site-description">Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        
+        <div class="trigger"><a class="page-link" href="/inteligencia-superficial/sobre/">Sobre</a><a class="page-link" href="/inteligencia-superficial/pesquisa/">Pesquisa</a><a class="page-link" href="/inteligencia-superficial/categories/">Categorias</a></div>
+      </nav></header>
+  </div>
+</div> 
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">O que é &quot;Gradient Descent&quot; (GD)?</h1><p class="page-description">Como que a máquina aprende</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-04-12T00:00:00-05:00" itemprop="datePublished">
+        Apr 12, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      10 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#machine learning">machine learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#algoritmos de otimização">algoritmos de otimização</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#aprendizado supervisionado">aprendizado supervisionado</a>
+        
+      
+      </p>
+    
+
+    </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#tldr">TL;DR</a></li>
+<li class="toc-entry toc-h1"><a href="#gradient-descent">Gradient Descent</a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#o-setup">O Setup</a></li>
+<li class="toc-entry toc-h2"><a href="#encontrando-o-mínimo">Encontrando o Mínimo</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#a-matemática">A Matemática</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#derivadas">Derivadas</a></li>
+<li class="toc-entry toc-h4"><a href="#passo-a-passo---o-algorítmo">Passo a Passo - O Algorítmo</a></li>
+<li class="toc-entry toc-h4"><a href="#passo-maior-que-a-perna---learning-rate">Passo Maior que a Perna - Learning Rate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#várias-variáveis---o-gradiente">Várias Variáveis - O Gradiente</a></li>
+<li class="toc-entry toc-h2"><a href="#aprendizado">“Aprendizado”?</a></li>
+<li class="toc-entry toc-h2"><a href="#outras-implementações">Outras Implementações</a></li>
+<li class="toc-entry toc-h2"><a href="#nomenclatura">Nomenclatura</a></li>
+<li class="toc-entry toc-h2"><a href="#footnotes">Footnotes</a></li>
+</ul>
+</li>
+</ul><h2 id="tldr">
+<a class="anchor" href="#tldr" aria-hidden="true"><span class="octicon octicon-link"></span></a>TL;DR</h2>
+
+<p>“Gradient descent” é um algoritmo de otimização. Ele é usado pra procurar mínimos de uma função de modo iterativo, através dando passos em direção ao ponto “mais baixo” da função.</p>
+
+<hr>
+
+<h1 id="gradient-descent">
+<a class="anchor" href="#gradient-descent" aria-hidden="true"><span class="octicon octicon-link"></span></a>Gradient Descent</h1>
+
+<p>Quando a gente fala em “machine learning”, ou “aprendizado de máquina”, o que eles querem dizer com esse “aprender”? Como que se ensina uma máquina?</p>
+
+<div style="text-align:center"><img src="https://media.giphy.com/media/Zv8jzo63AzW3m/giphy.gif"></div>
+
+<p>Ehh… não é bem assim. Bem menos sexy, na verdade, mas também mais simples.</p>
+
+<h2 id="o-setup">
+<a class="anchor" href="#o-setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>O Setup</h2>
+
+<p>Como que nós podemos medir o quão bom o nosso modelo de machine learning é? Como que nós comparamos dois modelos? Acontece que existe uma função que mede exatamente isso, uma função que mede o <em>erro</em> do nosso modelo. Essa <strong>função aceita os mesmos parâmetros do modelo</strong>, e retorna o erro do modelo.</p>
+
+<p>Por exemplo, se eu quero acertar um alvo no chão com a minha raquete, uma batida muito forte prejudica meu jogo. Mas também se eu bato muito fraco o vento empurra a bolinha. Se eu conseguisse formular uma função <em>matemática</em> que pega a força que eu bati na bola e retorna a distância da bola até o alvo, esse seria a função do erro, e eu seria o modelo.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+
+<div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>
+   <span class="Toast-content">Nós temos saber a derivada da nossa função de erro.</span>
+</div>
+
+<p>Aqui nós estamos tentando encontrar o parâmetro (no nosso exemplo a força) que vai <strong>reduzir</strong> o erro (distância) ao máximo. Mas como?</p>
+
+<h2 id="encontrando-o-mínimo">
+<a class="anchor" href="#encontrando-o-m%C3%ADnimo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encontrando o Mínimo</h2>
+
+<p>Essa pergunta não é nova. Desde o colegial nós aprendemos a achar mínimos e máximos de uma função. Mas e se nós tivermos várias variáveis? Cálculo multivariável, resolvendo um sistema de equações com as derivadas parciais.</p>
+
+<p>O problema é nós resolvemos essas equações simbolicamente - com variáveis simbólicas como $x$ e $y$. Mas isso é <strong>muito</strong> difícil para um computador. Algumas calculadoras até oferecem essa opção mas muitas vezes não encontra resultado. Uma solução mais robusta é resolver esse problema numericamente.</p>
+
+<p>Além disso, resolvendo numericamente nós evitamos alguns problemas teóricos relacionados ao uso de derivadas de <a href="https://pt.wikipedia.org/wiki/Fun%C3%A7%C3%A3o_cont%C3%ADnua">funções que não são contínuas</a>.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
+
+<h3 id="a-matemática">
+<a class="anchor" href="#a-matem%C3%A1tica" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Matemática</h3>
+
+<p>Resolver numericamente consiste em computar valores aproximados da nossa função do erro e iterativamente mudar os parâmetros de nossa função, reduzindo esse erro aos poucos (se está confuso, calma que vai ficar mais claro até o fim desse post). Antes, vamos definir nossos termos:</p>
+
+<div class="Toast">
+   <span class="Toast-icon"><svg class="octicon octicon-info octicon octicon-info" viewbox="0 0 14 16" version="1.1" width="14" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 01-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 01-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>
+   <span class="Toast-content">Quando resolvemos numericamente e fazemos essas aproximações, nós aproximamos os valores mínimos da função, mas talvez (e provavelmente) nunca chegamos nesse valor mínimo.</span>
+</div>
+
+<ul>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">f \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> nossa função que indica o erro do nosso modelo</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">p \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord mathdefault">p</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o parâmetro que essa função toma</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">e \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">e</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o erro do nosso modelo para um grupo de parâmetros</li>
+</ul>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∴</mo><mi>f</mi><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo><mo>=</mo><mi>e</mi></mrow><annotation encoding="application/x-tex">\therefore f(p) = e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69224em;vertical-align:0em;"></span><span class="mrel amsrm">∴</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord mathdefault">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">e</span></span></span></span></span>
+
+<p>Vamos também supor para o nosso exemplo que nossa função seja concava, bonitinha, com um mínimo só. Alguma coisa assim:</p>
+
+<p><img src="/inteligencia-superficial/assets/manim/videos/grad_desc/images/CostGraph.png" alt="" title="Nossa função de erro"></p>
+
+<p>É importante perceber que uma função de erro é dificilmente assim. Em casos mais práticos a função é bem mais bagunçada e têm vários máximos e mínimos. Também vale ressaltar que esses métodos para achar o mínimo estão à procura do <a href="https://pt.wikipedia.org/wiki/Pontos_extremos_de_uma_fun%C3%A7%C3%A3o#M%C3%A1ximos_e_m%C3%ADnimos">mínimo local</a>, e não global.</p>
+
+<h4 id="derivadas">
+<a class="anchor" href="#derivadas" aria-hidden="true"><span class="octicon octicon-link"></span></a>Derivadas</h4>
+
+<p>Lembrando que as <a href="https://pt.wikipedia.org/wiki/Derivada">derivadas</a> são o <a href="https://pt.wikipedia.org/wiki/Entes_geom%C3%A9tricos_fundamentais#Coeficiente_angular">coeficiente angular</a> da linha tangente a uma curva, se a gente “cai” num ponto aleatório da nossa função de erro, a gente percebe que:</p>
+
+<ul>
+  <li>Quando estamos “a frente” do nosso ponto mais baixo $\rightarrow$ nossa derivada é negativa</li>
+  <li>Quando estamos “pra trás” do nosso ponto mais baixo $\rightarrow$ nossa derivada é positiva</li>
+</ul>
+
+<p><img src="/inteligencia-superficial/assets/manim/videos/grad_desc/480p15/CostDerivativesGraph.gif" alt="" title="Derivadas e as tangentes"></p>
+
+<p>Ou seja, a derivada já nos indica pra que lado devemos caminhar. Mais tecnicamente, ela indica se o mínimo da nossa função está num valor maior ou menor do que o nosso $x$ atual!</p>
+
+<p>Mais que isso, quando chegamos mais perto do mínimo nossa derivada também diminui. Ou seja, a magnitude da derivada também nos fala quão próximo desse mínimo nós estamos.</p>
+
+<h4 id="passo-a-passo---o-algorítmo">
+<a class="anchor" href="#passo-a-passo---o-algor%C3%ADtmo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Passo a Passo - O Algorítmo</h4>
+
+<p>Agora nós podemos começar de um ponto aleatório e dar vários passinhos até chegar mais e mais perto do nosso mínimo. O nosso passo-a-passo fica assim:</p>
+
+<ul>
+  <li>Chuta aonde está o ponto mais baixo</li>
+  <li>Calcule a derivada da função nesse ponto</li>
+  <li>Ajuste o seu chute dando um passo em proporcional à derivada</li>
+  <li>Repita o processo até que esteja satisfeito</li>
+</ul>
+
+<!-- <video width="100%" height="auto" loop autoplay controls>
+  <source src="/inteligencia-superficial/assets/manim/....mp4" type="video/mp4">
+  O seu browser não suporta a visualização de vídeos.
+</video> -->
+
+<p><img src="/inteligencia-superficial/assets/manim/videos/grad_desc/480p15/CostSteps.gif" alt="" title="Passo-a-passo visualizado"></p>
+
+<p>E é isso! A idéia básica é essa. O resto são detalhes de implementação.</p>
+
+<div style="text-align:center"><img src="https://media.giphy.com/media/mHEes6Quf8XK0/giphy.gif"></div>
+
+<h4 id="passo-maior-que-a-perna---learning-rate">
+<a class="anchor" href="#passo-maior-que-a-perna---learning-rate" aria-hidden="true"><span class="octicon octicon-link"></span></a>Passo Maior que a Perna - <em>Learning Rate</em>
+</h4>
+
+<p>Mas e se a curva é muito íngreme e se nosso passo acaba sendo muito largo? E se a gente nunca consegue parar nesse mínimo porque sempre passamos dele?</p>
+
+<p><img src="/inteligencia-superficial/assets/manim/videos/grad_desc/480p15/CostLargeSteps.gif" alt="" title="A mudança do valor do parâmetro é muito larga."></p>
+
+<p>Nós podemos ajustar o passo, multiplicando por uma constante. Mas temos de tomar cuidado - se o passo for muito pequeno, talvez nunca chegaremos no mínimo (além de demorar muito mais do que o necessário) e se muito largo, e vamos acabar mais longe ainda. Como encontrar o essa constante? Tentativa e erro. Ao contrário do(s) parâmetro(s) da função, não encontramos esse valor através desse processo.</p>
+
+<p>Essa constante é o que chamamos de <strong>learning rate</strong> (taxa de aprendizado, muitas vezes denominado $\alpha$), e é um <em>hyperparâmetro</em> do modelo. A equação então fica:</p>
+
+<ul>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub><mo>→</mo></mrow><annotation encoding="application/x-tex">p_{t} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o “novo” parâmetro</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>→</mo></mrow><annotation encoding="application/x-tex">p_{t-1} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.638891em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o parâmetro anterior</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">\alpha \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> uma constante que multiplicamos pela derivada, controlando o passo - a taxa de aprendizado</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>m</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>→</mo></mrow><annotation encoding="application/x-tex">m_{t-1} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.638891em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> a derivada da função do erro, que é a linha tangente à função, computada no ponto $p_{t-1}$</li>
+</ul>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>p</mi><mi>t</mi></msub><mo>←</mo><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><mi>α</mi><msub><mi>m</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow><annotation encoding="application/x-tex">p_{t} \leftarrow p_{t-1} - \alpha m_{t-1}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.791661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.638891em;vertical-align:-0.208331em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mord"><span class="mord mathdefault">m</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span></span></span>
+
+<blockquote>
+  <p>Os parâmetros de um modelo são os valores que são otimizados nesse processo.
+Os hyperparâmetros de um modelo são valores que não são otimizados sistematicamente e devemos ajustá-los manualmente.</p>
+</blockquote>
+
+<p>Mas os mesmos cuidados aplicam aqui. Essa constante não pode ser muito larga, nem muito pequena.</p>
+
+<h2 id="várias-variáveis---o-gradiente">
+<a class="anchor" href="#v%C3%A1rias-vari%C3%A1veis---o-gradiente" aria-hidden="true"><span class="octicon octicon-link"></span></a>Várias Variáveis - O Gradiente</h2>
+
+<p>Por enquanto nós estamos olhando exemplos muito simples. Mas e se tivéssemos muitas variáveis no nosso modelo? A idéia é a mesma: computamos a derivada parcial em relação a cada uma dessas variáveis, e damos passos nessas direções. Quando empacotamos todas essas derivadas parciais, nós temos o gradiente da nossa função de erro! Dai que vem o nome <em>gradient descent</em> (ou descida do gradiente).</p>
+
+<p>Em duas dimensões, podemos pensar na nossa função de erro como tentando encontrar o ponto mais baixo de uma cratera, num dia muito nublado - damos um passo pra onde a inclinação indica. Quanto mais íngrime, maior o passo que damos.</p>
+
+<p>Inclusive, o gradiente de uma função sempre aponta pra direção de maior aumento. Se formos para o sentido oposto do gradiente, estamos indo na direção de maior declínio.</p>
+
+<p>Ah, e a nossa linha tangente vira o plano tangente a curva!</p>
+
+<p><img src="/inteligencia-superficial/assets/manim/videos/grad_desc/480p15/CostTwoDimensions.gif" alt="" title="Gradient descent para duas variáveis."></p>
+
+<p>Empacotando os parâmetros (um para cada dimensão) em um vetor, nos ficamos com:</p>
+
+<ul>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><msub><mi>p</mi><mi>t</mi></msub><mo>⃗</mo></mover><mo>→</mo></mrow><annotation encoding="application/x-tex">\vec{p_{t}} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9084399999999999em;vertical-align:-0.19444em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> os “novos” parâmetros (um para cada dimensão)</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>⃗</mo></mover><mo>→</mo></mrow><annotation encoding="application/x-tex">\vec{p_{t-1}} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.922331em;vertical-align:-0.208331em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> os parâmetros anteriores (um para cada dimensão)</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">\alpha \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> uma constante que multiplicamos pela derivada, controlando o passo - a taxa de aprendizado</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∇</mi><mi>f</mi><mo stretchy="false">(</mo><mover accent="true"><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>⃗</mo></mover><mo stretchy="false">)</mo><mo>→</mo></mrow><annotation encoding="application/x-tex">\nabla f(\vec{p_{t-1}}) \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∇</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o gradiente da função do erro, que são as derivadas parciais de cada uma das dimensões do nosso problema, computadas no ponto $\vec{p_{t-1}}$</li>
+</ul>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><msub><mi>p</mi><mi>t</mi></msub><mo>⃗</mo></mover><mo>←</mo><mover accent="true"><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>⃗</mo></mover><mo>−</mo><mi>α</mi><mi mathvariant="normal">∇</mi><mi>f</mi><mo stretchy="false">(</mo><mover accent="true"><msub><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>⃗</mo></mover><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\vec{p_{t}} \leftarrow \vec{p_{t-1}} - \alpha \nabla f(\vec{p_{t-1}})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9084399999999999em;vertical-align:-0.19444em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2805559999999999em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.19444em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.922331em;vertical-align:-0.208331em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mord">∇</span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.714em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2355em;"><span class="overlay" style="height:0.714em;width:0.471em;"><svg width="0.471em" height="0.714em" style="width:0.471em" viewbox="0 0 471 714" preserveaspectratio="xMinYMin"><path d="M377 20c0-5.333 1.833-10 5.5-14S391 0 397 0c4.667 0 8.667 1.667 12 5
+3.333 2.667 6.667 9 10 19 6.667 24.667 20.333 43.667 41 57 7.333 4.667 11
+10.667 11 18 0 6-1 10-3 12s-6.667 5-14 9c-28.667 14.667-53.667 35.667-75 63
+-1.333 1.333-3.167 3.5-5.5 6.5s-4 4.833-5 5.5c-1 .667-2.5 1.333-4.5 2s-4.333 1
+-7 1c-4.667 0-9.167-1.833-13.5-5.5S337 184 337 178c0-12.667 15.667-32.333 47-59
+H213l-171-1c-8.667-6-13-12.333-13-19 0-4.667 4.333-11.333 13-20h359
+c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>
+
+<p>Eu sei que se você não está 100% confortável com álgebra linear isso pode assustar um pouco. Mas o que essa equação ta descrevendo são várias equações iguais à que apresentamos acima. Uma para cada dimensão do nosso problema. Ou seja:</p>
+
+<ul>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">d \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> a dimensão do parâmetro</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>→</mo></mrow><annotation encoding="application/x-tex">p_{t}^{(d)} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2905559999999998em;vertical-align:-0.24575599999999992em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.454244em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span style="top:-3.2197999999999998em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24575599999999992em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o “novo” parâmetro da dimensão $d$</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>→</mo></mrow><annotation encoding="application/x-tex">p_{t-1}^{(d)} \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3694389999999999em;vertical-align:-0.3246389999999999em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3246389999999999em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> o parâmetro anterior da dimensão $d$</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>→</mo></mrow><annotation encoding="application/x-tex">\alpha \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> uma constante que multiplicamos pela derivada, controlando o passo - a taxa de aprendizado</li>
+  <li>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mi mathvariant="normal">∂</mi><mrow><mi mathvariant="normal">∂</mi><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup></mrow></mfrac><mi>f</mi><mo stretchy="false">(</mo><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>→</mo></mrow><annotation encoding="application/x-tex">\frac{\partial}{\partial p_{t-1}^{(d)}} f (p_{t-1}^{(d)})) \rightarrow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.855885em;vertical-align:-0.8110850000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8801079999999999em;"><span style="top:-2.4486399999999997em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0590857142857144em;"><span style="top:-2.2242em;margin-left:0em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5357142857142856em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.059085714285714em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5357142857142856em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3710357142857143em;"><span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight" style="margin-right:0.05556em;">∂</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8110850000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3246389999999999em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span></span></span></span> a derivadas parcial da nossa função do erro para a dimensão $d$, em relação ao parâmetro $p_{t-1}$ da dimensão $d$</li>
+</ul>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>p</mi><mi>t</mi><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>←</mo><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo>−</mo><mi>α</mi><mfrac><mi mathvariant="normal">∂</mi><mrow><mi mathvariant="normal">∂</mi><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup></mrow></mfrac><mi>f</mi><mo stretchy="false">(</mo><msubsup><mi>p</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow><mrow><mo stretchy="false">(</mo><mi>d</mi><mo stretchy="false">)</mo></mrow></msubsup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">p_{t}^{(d)} \leftarrow p_{t-1}^{(d)} - \alpha \frac{\partial}{\partial p_{t-1}^{(d)}} f (p_{t-1}^{(d)})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.290556em;vertical-align:-0.24575599999999997em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.454244em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.24575599999999997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.3694389999999999em;vertical-align:-0.324639em;"></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.324639em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.630879em;vertical-align:-1.259439em;"></span><span class="mord mathdefault" style="margin-right:0.0037em;">α</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.37144em;"><span style="top:-2.11em;"><span class="pstrut" style="height:3.0448em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.324639em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.2748em;"><span class="pstrut" style="height:3.0448em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.7218em;"><span class="pstrut" style="height:3.0448em;"></span><span class="mord"><span class="mord" style="margin-right:0.05556em;">∂</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.259439em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0448em;"><span style="top:-2.433692em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2198em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.324639em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span>
+
+<p>Eu sei que ainda é muita letrinha, e que pode ser confuso. Respira fundo e vai com calma. Talvez quando falarmos de regressão linear isso também fique mais claro.</p>
+
+<h2 id="aprendizado">
+<a class="anchor" href="#aprendizado" aria-hidden="true"><span class="octicon octicon-link"></span></a>“Aprendizado”?</h2>
+
+<p>Esse processo de reduzir o erro de um modelo é o que chamamos de “aprendizado”, ou como “ensinamos” do modelo!</p>
+
+<div style="text-align:center"><img src="https://media.giphy.com/media/oOTTyHRHj0HYY/giphy.gif"></div>
+
+<p>Bom, eu sei que é meio decepcionante. <strong>Ninguém</strong> aprende assim. Mas calma, deixe-me explicar. em machine learning, essa função de erro é formulada a partir dos exemplos. Essa função muda de modelo para modelo.</p>
+
+<p>No começo desse post eu dei um exemplo: se eu estiver jogando tênis, tentando acertar um alvo no chão, e estou tentando ajustar a força ideal para chegar o mais próximo do alvo possível. Uma função de erro poderia ser a soma de todas as distâncias do centro do alvo até onde eu acertei a bolinha, seja 100 ou 1000.</p>
+
+<p>Quando seguimos os etapas desse algorítmo, cada passo é dado depois de computar a derivada. E a derivada leva em consideração todos as nossas tentatívas (exemplos)<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. Ou seja, reduzimos o erro depois de  “visitarmos” essas experiências passadas. Do mesmo jeito que eu, quanto mais vezes eu tento, vou melhorando (reduzindo meu erro).</p>
+
+<p>Tudo depende de como definimos “aprender”. Se eu definir como “a melhora de performance com nossas experiências”, não é tão incoerente falar que a máquina aprende.</p>
+
+<p>Além disso, quando falamos de <em>stochastic gradient descent</em> (descida do gradiente estocástico), ou <em>online learning</em>, nós visitamos uma parte dos exemplos pra cada passo, o que traz mais essa idéia de melhorar performance quando o modelo “vê” novas observações, e reforçando essa ideia de aprendizado.</p>
+
+<p>Não vamos falar de <em>stochastic gradient descent</em> ou <em>online learning</em> nesse post. Aliás, existem muitas variações desses algoritmos de otimização. Na prática, ninguém acaba usando <em>gradient descent</em> por haver opções melhores, mas a idéia central de todos os algoritmos é a mesma.</p>
+
+<h2 id="outras-implementações">
+<a class="anchor" href="#outras-implementa%C3%A7%C3%B5es" aria-hidden="true"><span class="octicon octicon-link"></span></a>Outras Implementações</h2>
+
+<p>Existem maneiras de melhorar a performance desses algoritmos. Por exemplo, nós poderíamos reduzir o <em>learning rate</em> a cada passo, dentre vários outros algorítmos:</p>
+
+<ul>
+  <li><a href="https://pt.wikipedia.org/wiki/M%C3%A9todo_de_Newton%E2%80%93Raphson">Métodos de Newton</a></li>
+  <li>Métodos de Quasi-Newton</li>
+  <li>Adam</li>
+</ul>
+
+<p>Esses algoritmos usam a idéia de <a href="https://pt.wikipedia.org/wiki/Momento_linear">momento</a> na hora de dar nossos passos. Outros ainda usam também a segunda derivada para calcular cada passo. Não vamos explicá-los nesse post.</p>
+
+<h2 id="nomenclatura">
+<a class="anchor" href="#nomenclatura" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nomenclatura</h2>
+
+<p>Nós falamos bastante dessa “função do erro”. Mas existem vários nomes que também são usados:</p>
+
+<ul>
+  <li>Função do erro (<em>error function</em>)</li>
+  <li>Função objetivo (<em>objective function</em>)</li>
+  <li>Função de custo (<em>cost function</em>)</li>
+  <li>Função de energia (<em>energy function</em>)</li>
+  <li>Função de perda (<em>loss function</em>)</li>
+</ul>
+
+<p>Em todos os casos, nós procuramos o mínimo dessa função.</p>
+
+<p>Além disso, nós falamos sobre “aprender”. Em machine learning, esse processo também é chamado por nomes diferentes:</p>
+
+<ul>
+  <li>Aprender (<em>learn</em>)</li>
+  <li>Treinar (<em>train</em>)</li>
+  <li>Ajustar (<em>fit</em>)</li>
+</ul>
+
+<p>Explicamos o que são os parâmetros e os hyperparâmetros. Esse parâmetros também são chamados de:</p>
+
+<ul>
+  <li>Parâmetros (<em>parameters</em>)</li>
+  <li>Pesos (<em>weights</em>)</li>
+</ul>
+
+<p>São diferentes nomes, mas eles se referem às mesmas coisas!</p>
+
+<h2 id="footnotes">
+<a class="anchor" href="#footnotes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Footnotes</h2>
+
+<!-- Referências -->
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Obviamente esse exemplo é muito simples. Existem muitos outros fatores que deveriam ser levados em consideração. Mas ainda assim esse é um problema comum em machine learning - muitas vezes existe bastante incerteza de que os dados obtidos possuem as informações necessárias para qualquer tipo de previsões. <a href="#fnref:1" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:2">
+      <p>Nossa função de erro não precisa ser diferenciável em todos os pontos. A função $f(x)=\mid x \mid$ por exemplo não é diferenciável quando $x=0$, mas como estamos resolvendo numericamente isso não é um problema (nunca vamos cair no ponto $0.00000…0$, mas talvez no $0.00000…1$, etc.). Mesmo que fosse, nós poderíamos, se quiséssemos, definir uma “derivada” no ponto $x=0$. <a href="#fnref:2" class="reversefootnote">↩</a></p>
+    </li>
+    <li id="fn:3">
+      <p>Para ver mais sobre como formulamos essas funções de erro (custo) a partir de nossas observações, veja um exemplo sobre regressão linear ou regressão logística. <a href="#fnref:3" class="reversefootnote">↩</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="murilo-cunha/inteligencia-superficial"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/inteligencia-superficial/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/inteligencia-superficial/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Inscreva-se</span>
+          </a>
+        </p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Inteligência Superficial</span> de <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/murilo-cunha/blog-ia" property="cc:attributionName" rel="cc:attributionURL">Murilo Cunha</a> está licenciado com uma Licença <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons - Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional</a>.
+      </div>
+      <!-- <div class="footer-col">
+        <p>Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div> -->
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
