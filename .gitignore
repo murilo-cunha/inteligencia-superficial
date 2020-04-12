@@ -1,18 +1,29 @@
 *.swp
 ~*
 *~
-_site
+
+# Jekyll-related stuff
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
 vendor
+
+# Caching and other residual files
+_site
 _notebooks/.ipynb_checkpoints
+__pycache__
+Tex/
+manim/**
+!manim/videos/grad_desc/480p15/
+
 # Local Netlify folder
 .netlify
 .tweet-cache
+
+# IDE files
 .idea
 .DS_Store
-Tex
-videos
-__pycache__
 .vscode
+
+
+
