@@ -468,7 +468,7 @@ class CostTwoDimensions(ThreeDScene):
             "v_min": -3.5,
             "v_max": 3.5,
             "checkerboard_colors": [YELLOW_D, YELLOW_E],
-            "resolution": 32  # TODO: Change this once we are happy
+            "resolution": 16
         },
         "func_opacity": 0.75
     }
@@ -503,8 +503,8 @@ class CostTwoDimensions(ThreeDScene):
             u_max=self.parametric_kwargs['u_max'],
             v_min=self.parametric_kwargs['v_min'],
             v_max=self.parametric_kwargs['v_max'],
-            checkerboard_colors=[RED],
-            resolution=10
+            checkerboard_colors=[RED_D, RED_E],
+            resolution=1
         ).set_opacity(1)
 
         # Initialize the weights - remember that the weights are the xy coordinates in the xyz plane
@@ -553,6 +553,8 @@ class CostTwoDimensions(ThreeDScene):
             FadeOut(points[-1]),
             FadeOut(arrows[-1]),
             FadeOut(gradient_text[-1][0]),
-            FadeOut(gradient_text[-1][1])
+            FadeOut(gradient_text[-1][1]),
+            FadeOut(cost_graph)
         )
+        self.wait(2)
 
