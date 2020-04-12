@@ -18,7 +18,7 @@ url: "https://murilo-cunha.github.io" # the base hostname & protocol for your si
 baseurl: "/inteligencia-superficial" # the subpath of your site, e.g. "/blog".
 
 # The avatar for the header - has to be "baseurl + image location"
-avatar: "/inteligencia-superficial/images/avatar.png"
+avatar: "https://murilo-cunha.github.io/inteligencia-superficial/images/avatar.png"
 
 # Github and twitter are optional:
 minima:
