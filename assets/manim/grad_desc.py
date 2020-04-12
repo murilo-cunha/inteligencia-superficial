@@ -536,7 +536,7 @@ class CostTwoDimensions(ThreeDScene):
                     Write(gradient_text[i][1])
                 )
                 self.begin_ambient_camera_rotation(rate=0.2)
-                self.play(ShowCreation(tangent_graph))
+                self.play(FadeIn(tangent_graph))
                 self.wait(4)
                 self.play(FadeOut(tangent_graph))
             else:
