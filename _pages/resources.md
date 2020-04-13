@@ -13,7 +13,7 @@ Aqui nós não abordamos temas importantes para alguém se interessa em botar es
 
 Para conceitos matemáticos, o material consiste em vídeos, artigos e livros explicativos sobre os diferentes temas. Também vale procurar por perguntas semelhantes em fóruns - como [Stack Exchange][stack_math], etc. ou até postar a sua pergunta depois se a informação não foi encontrada.
 
-<div style="text-align:center"><img src="https://media.giphy.com/media/HBWbIuHvXI2Eo/giphy.gif" /></div>
+<div style="text-align:center"><img src="https://media.giphy.com/media/DqD0pMdvIYYEw/giphy.gif" /></div>
 
 Eu listei abaixo alguns recursos que botam o conteúdo em ordem lógica, e mais estruturado, o que eu acho melhor pras pessoas que estão vendo isso pela primeira vez.
 
