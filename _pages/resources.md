@@ -32,6 +32,20 @@ Existem também os fóruns de perguntas - como [Stack Overflow][stack_over], ond
 
 Abaixo eu listei alguns lugares que você pode aprender mais sobre python.
 
-* [Coursera/USP][coursera_usp] - curso de python (bom pra iniciantes)
-* [HackerRank][hackerrank][^2] - aprendizado baseado em exercícios
+* [Coursera/USP - parte 1][coursera_1] - curso de python (bom pra iniciantes)
+* [Coursera/USP - parte 2][coursera_2] - curso de python (bom pra iniciantes)
+* [HackerRank][hackerrank][^2] - aprendizado baseado na resolução de exercícios
 * [Outros recursos (GitHub)][git_rec] - outros livros e cursos
+
+# Footnotes
+[^1]: O canal é inteiramente em inglês, mas alguns vídeos têm legenda em português. Por mais que eu tente restringir à material em português, esse canal é muito bom. Ah, e ele tem até videos sobre redes neurais!
+[^2]: A plataforma também é em inglês. A plataforma também não é limitada a python só. Vai dos conceitos mais básicos aos avançados.
+
+[khan_calc]: https://pt.khanacademy.org/math/calculus-home
+[khan_al]: https://pt.khanacademy.org/math/linear-algebra
+[3b1b_calc]: https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr
+[3b1b_al]:https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+[coursera_1]: https://www.coursera.org/learn/ciencia-computacao-python-conceitos
+[coursera_2]: https://www.coursera.org/learn/ciencia-computacao-python-conceitos-2
+[hackerrank]: https://www.hackerrank.com/domains/python
+[git_rec]: https://github.com/learnbr/python
