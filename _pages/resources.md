@@ -5,7 +5,7 @@ permalink: /recursos/
 search_exclude: true
 ---
 
-Aqui nós não abordamos temas importantes para alguém se interessa em botar esses conceitos em prática: cálculo, álgebra linear e programação. Apesar disso, queria listar aqui alguns recursos **gratuitos** que eu encontrei relacionados à esses temas.
+Aqui nós não abordaremos de forma tão profunda temas como: cálculo, álgebra linear e programação. Apesar disso, queria listar aqui alguns recursos **gratuitos** que eu encontrei relacionados à eles, caso vocês queiram botar esses conceitos em prática.
 
 <div style="text-align:center"><img src="https://media.giphy.com/media/VTxmwaCEwSlZm/giphy.gif" /></div>
 
@@ -15,7 +15,7 @@ Para conceitos matemáticos, o material consiste em vídeos, artigos e livros ex
 
 <div style="text-align:center"><img src="https://media.giphy.com/media/DqD0pMdvIYYEw/giphy.gif" /></div>
 
-Eu listei abaixo alguns recursos que botam o conteúdo em ordem lógica, e mais estruturado, o que eu acho melhor pras pessoas que estão vendo isso pela primeira vez.
+Eu listei abaixo alguns recursos que botam o conteúdo em ordem lógica, e mais estruturado, o que eu acho melhor para as pessoas que estão vendo isso pela primeira vez.
 
 ### Cálculo
 
@@ -38,8 +38,8 @@ Existem também os fóruns de perguntas - como [Stack Overflow][stack_over], ond
 
 Abaixo eu listei alguns lugares que você pode aprender mais sobre python.
 
-* [Coursera/USP - parte 1][coursera_1] - curso de python (bom pra iniciantes)
-* [Coursera/USP - parte 2][coursera_2] - curso de python (bom pra iniciantes)
+* [Coursera/USP - parte 1][coursera_1] - curso de python (bom para iniciantes)
+* [Coursera/USP - parte 2][coursera_2] - curso de python (bom para iniciantes)
 * [HackerRank][hackerrank][^2] - aprendizado baseado na resolução de exercícios
 * [Outros recursos (GitHub)][git_rec] - outros livros e cursos
 

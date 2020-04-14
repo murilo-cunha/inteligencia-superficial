@@ -11,7 +11,7 @@ Olá, eu nome é Murilo Cunha
 
 Atualmente, eu moro e trabalho na Europa, como um engenheiro de machine learning.
 
-Eu nasci em São Paulo, onde vivi até o colegial. De lá fui para os Estados Unidos, onde me formei em engenharia mecânica com concentração em mecatrônica. No meu último ano da faculdade, eu tive a oportunidade de trabalhar em engenharia industrial. Foi lá que eu percebi que não era exatamente isso com o que eu queria fazer. Resolvi fazer um mestrado em inteligência artificial em na Bélgica, país onde moro hoje em dia.
+Eu nasci em São Paulo, onde vivi até o colegial. De lá fui para os Estados Unidos, onde me formei em engenharia mecânica com concentração em mecatrônica. No meu último ano da faculdade, eu tive a oportunidade de trabalhar em engenharia industrial. Foi lá que eu percebi que não era exatamente isso com o que eu queria fazer. Resolvi fazer um mestrado em inteligência artificial na Bélgica, país onde moro hoje em dia.
 
 Ao longo dos anos, eu percebi que por mais que exista bastante conteúdo legal sobre machine learning online, a maior parte é em inglês. Também entendo que por mais que muitos dominem a língua inglesa, ter o conteúdo em português facilitaria muito o aprendizado de muita gente.
 
