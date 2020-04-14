@@ -5,7 +5,7 @@ permalink: /recursos/
 search_exclude: true
 ---
 
-Aqui nós não abordaremos de forma tão profunda temas como: cálculo, álgebra linear e programação. Apesar disso, queria listar aqui alguns recursos **gratuitos** que eu encontrei relacionados à eles, caso vocês queiram botar esses conceitos em prática.
+Aqui nós não abordaremos de forma tão profunda temas como: cálculo, álgebra linear e programação. Apesar disso, queria listar aqui alguns recursos **gratuitos** que eu encontrei relacionados à eles, caso alguém queira aprender, praticar ou revisar.
 
 <div style="text-align:center"><img src="https://media.giphy.com/media/VTxmwaCEwSlZm/giphy.gif" /></div>
 
