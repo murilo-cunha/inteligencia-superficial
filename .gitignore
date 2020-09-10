@@ -10,7 +10,7 @@ vendor
 
 # Caching and other residual files
 _site
-_notebooks/.ipynb_checkpoints
+.ipynb_checkpoints/
 __pycache__
 Tex/
 manim/**
