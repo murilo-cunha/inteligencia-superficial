@@ -15,7 +15,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-12T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Como que a máquina aprende","@type":"BlogPosting","headline":"O que é ‘Gradient Descent’ (GD)?","dateModified":"2020-04-12T00:00:00-05:00","datePublished":"2020-04-12T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","@context":"https://schema.org"}</script>
+{"headline":"O que é ‘Gradient Descent’ (GD)?","dateModified":"2020-04-12T00:00:00-05:00","description":"Como que a máquina aprende","datePublished":"2020-04-12T00:00:00-05:00","@type":"BlogPosting","url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/inteligencia-superficial/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" /><link rel="shortcut icon" type="image/x-icon" href="/inteligencia-superficial/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>O que é ‘Gradient Descent’ (GD)? | Inteligência Superficial</title>
@@ -30,7 +30,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-12T00:00:00-05:00" />
 <script type="application/ld+json">
-{"description":"Como que a máquina aprende","@type":"BlogPosting","headline":"O que é ‘Gradient Descent’ (GD)?","dateModified":"2020-04-12T00:00:00-05:00","datePublished":"2020-04-12T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","@context":"https://schema.org"}</script>
+{"headline":"O que é ‘Gradient Descent’ (GD)?","dateModified":"2020-04-12T00:00:00-05:00","description":"Como que a máquina aprende","datePublished":"2020-04-12T00:00:00-05:00","@type":"BlogPosting","url":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/machine%20learning/algoritmos%20de%20otimiza%C3%A7%C3%A3o/aprendizado%20supervisionado/2020/04/12/grad_desc.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -182,7 +182,7 @@ window.onload = wrap_img;
    <span class="Toast-content">Nós temos que saber a derivada dessa nossa função de erro.</span>
 </div>
 
-<p>Por exemplo, se eu estou jogando <em>curling</em> eu não posso jogar o disco muito forte nem muito fraco. Eu tenho que jogar na força certa. Se eu conseguir formular uma função <em>matemática</em> que pega a força que eu joguei o disco retorna a distância da disco até o meu alvo, esse seria a função do erro, e eu seria o modelo.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+<p>Por exemplo, se eu estou jogando <em>curling</em> eu não posso jogar o disco muito forte nem muito fraco. Eu tenho que jogar na força certa. Se eu conseguir formular uma função <em>matemática</em> que pega a força que eu joguei o disco retorna a distância da disco até o meu alvo, esse seria a função do erro, e eu seria o modelo.<sup id="fnref:1" role="doc-noteref"><a href="#fn:1" class="footnote">1</a></sup></p>
 
 <div style="text-align:center"><img src="https://media.giphy.com/media/47gaUHlQkbN4s/giphy.gif"></div>
 
@@ -195,7 +195,7 @@ window.onload = wrap_img;
 
 <p>O problema é nós resolvemos essas equações simbolicamente - com variáveis simbólicas como $x$ e $y$. Mas isso é <strong>muito</strong> difícil para um computador. Algumas calculadoras até oferecem essa opção mas muitas vezes não encontra resultado. Uma solução mais robusta é resolver esse problema numericamente.</p>
 
-<p>Além disso, resolvendo numericamente nós evitamos alguns problemas teóricos relacionados ao uso de derivadas de <a href="https://pt.wikipedia.org/wiki/Fun%C3%A7%C3%A3o_cont%C3%ADnua">funções que não são contínuas</a>.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
+<p>Além disso, resolvendo numericamente nós evitamos alguns problemas teóricos relacionados ao uso de derivadas de <a href="https://pt.wikipedia.org/wiki/Fun%C3%A7%C3%A3o_cont%C3%ADnua">funções que não são contínuas</a>.<sup id="fnref:2" role="doc-noteref"><a href="#fn:2" class="footnote">2</a></sup></p>
 
 <h3 id="a-matemática">
 <a class="anchor" href="#a-matem%C3%A1tica" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Matemática</h3>
@@ -384,7 +384,7 @@ c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="
 
 <p>No exemplo do começo do post, quando eu jogo <em>curling</em>, uma função de erro poderia ser a soma de todas as distâncias do centro do alvo até o meu disco. Ou seja, cada experiência minha é levada em consideração quando eu tento minimizar meu erro.</p>
 
-<p>Quando seguimos as etapas desse algorítmo, cada passo é dado depois de computar a derivada. E a derivada leva em consideração todos as nossas tentatívas (exemplos)<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>. Ou seja, reduzimos o erro depois de  “visitarmos” essas experiências passadas. Do mesmo jeito que eu, quanto mais vezes eu tento, vou melhorando (reduzindo meu erro).</p>
+<p>Quando seguimos as etapas desse algorítmo, cada passo é dado depois de computar a derivada. E a derivada leva em consideração todos as nossas tentatívas (exemplos)<sup id="fnref:3" role="doc-noteref"><a href="#fn:3" class="footnote">3</a></sup>. Ou seja, reduzimos o erro depois de  “visitarmos” essas experiências passadas. Do mesmo jeito que eu, quanto mais vezes eu tento, vou melhorando (reduzindo meu erro).</p>
 
 <p>Tudo depende de como definimos “aprender”. Se eu definir como “a melhora de performance com nossas experiências”, até faz sentido falar que a máquina aprende.</p>
 
@@ -442,16 +442,16 @@ c-16-25.333-24-45-24-59z"></path></svg></span></span></span></span><span class="
 <a class="anchor" href="#footnotes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Footnotes</h2>
 
 <!-- Referências -->
-<div class="footnotes">
+<div class="footnotes" role="doc-endnotes">
   <ol>
-    <li id="fn:1">
-      <p>Obviamente esse exemplo é muito simples. Existem muitos outros fatores que deveriam ser levados em consideração. Mas ainda assim esse é um problema comum em machine learning - muitas vezes existe bastante incerteza de que os dados obtidos possuem as informações necessárias para qualquer tipo de previsões. <a href="#fnref:1" class="reversefootnote">↩</a></p>
+    <li id="fn:1" role="doc-endnote">
+      <p>Obviamente esse exemplo é muito simples. Existem muitos outros fatores que deveriam ser levados em consideração. Mas ainda assim esse é um problema comum em machine learning - muitas vezes existe bastante incerteza de que os dados obtidos possuem as informações necessárias para qualquer tipo de previsões. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">↩</a></p>
     </li>
-    <li id="fn:2">
-      <p>Nossa função de erro não precisa ser diferenciável em todos os pontos. A função $f(x)=\mid x \mid$ por exemplo não é diferenciável quando $x=0$, mas como estamos resolvendo numericamente isso não é um problema (nunca vamos cair no ponto $0.00000…0$, mas talvez no $0.00000…1$, etc.). Mesmo que fosse, nós poderíamos, se quiséssemos, definir uma “derivada” no ponto $x=0$. <a href="#fnref:2" class="reversefootnote">↩</a></p>
+    <li id="fn:2" role="doc-endnote">
+      <p>Nossa função de erro não precisa ser diferenciável em todos os pontos. A função $f(x)=\mid x \mid$ por exemplo não é diferenciável quando $x=0$, mas como estamos resolvendo numericamente isso não é um problema (nunca vamos cair no ponto $0.00000…0$, mas talvez no $0.00000…1$, etc.). Mesmo que fosse, nós poderíamos, se quiséssemos, definir uma “derivada” no ponto $x=0$. <a href="#fnref:2" class="reversefootnote" role="doc-backlink">↩</a></p>
     </li>
-    <li id="fn:3">
-      <p>Para ver mais sobre como formulamos essas funções de erro (custo) a partir de nossas observações, veja um exemplo sobre regressão linear ou regressão logística. <a href="#fnref:3" class="reversefootnote">↩</a></p>
+    <li id="fn:3" role="doc-endnote">
+      <p>Para ver mais sobre como formulamos essas funções de erro (custo) a partir de nossas observações, veja um exemplo sobre regressão linear ou regressão logística. <a href="#fnref:3" class="reversefootnote" role="doc-backlink">↩</a></p>
     </li>
   </ol>
 </div>
