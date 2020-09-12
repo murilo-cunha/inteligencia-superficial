@@ -1,4 +1,171 @@
-<!--
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Sistemas de recommendação - Neural Collaborative Filtering | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Sistemas de recommendação - Neural Collaborative Filtering" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Demo sobre Neural Collaborative Filtering" />
+<meta property="og:description" content="Demo sobre Neural Collaborative Filtering" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Sistemas de recommendação - Neural Collaborative Filtering","dateModified":"2020-09-11T00:00:00-05:00","description":"Demo sobre Neural Collaborative Filtering","datePublished":"2020-09-11T00:00:00-05:00","@type":"BlogPosting","url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/inteligencia-superficial/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" /><link rel="shortcut icon" type="image/x-icon" href="/inteligencia-superficial/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Sistemas de recommendação - Neural Collaborative Filtering | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Sistemas de recommendação - Neural Collaborative Filtering" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Demo sobre Neural Collaborative Filtering" />
+<meta property="og:description" content="Demo sobre Neural Collaborative Filtering" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-09-11T00:00:00-05:00" />
+<script type="application/ld+json">
+{"headline":"Sistemas de recommendação - Neural Collaborative Filtering","dateModified":"2020-09-11T00:00:00-05:00","description":"Demo sobre Neural Collaborative Filtering","datePublished":"2020-09-11T00:00:00-05:00","@type":"BlogPosting","url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><div class="wrapper-masthead">
+  <div class="container">
+    <header class="masthead clearfix"><a href="/inteligencia-superficial/" class="site-avatar"><img src="https://murilo-cunha.github.io/inteligencia-superficial/images/avatar.png" /></a><div class="site-info"><h1 class="header-title"><a class="site-title" rel="author site-title-h1" href="/inteligencia-superficial/">Inteligência Superficial</a>
+        </h1>
+        <p class="site-description">Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        
+        <div class="trigger"><a class="page-link" href="/inteligencia-superficial/sobre/">Sobre</a><a class="page-link" href="/inteligencia-superficial/recursos/">Outros recursos</a><a class="page-link" href="/inteligencia-superficial/pesquisa/">Pesquisa</a><a class="page-link" href="/inteligencia-superficial/categories/">Categorias</a></div>
+      </nav></header>
+  </div>
+</div> 
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Sistemas de recommendação - Neural Collaborative Filtering</h1><p class="page-description">Demo sobre Neural Collaborative Filtering</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-09-11T00:00:00-05:00" itemprop="datePublished">
+        Sep 11, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      10 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#demo">demo</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#neural networks">neural networks</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#deep learning">deep learning</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#recommender systems">recommender systems</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#paper">paper</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/murilo-cunha/inteligencia-superficial/tree/master/_notebooks/2020-09-11-neural_collaborative_filter.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/murilo-cunha/inteligencia-superficial/master?filepath=_notebooks%2F2020-09-11-neural_collaborative_filter.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/murilo-cunha/inteligencia-superficial/blob/master/_notebooks/2020-09-11-neural_collaborative_filter.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Os-dados">Os dados </a></li>
+<li class="toc-entry toc-h1"><a href="#https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png">https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png </a></li>
+<li class="toc-entry toc-h1"><a href="#O-modelo-(Neural-Collaborative-Filtering)">O modelo (Neural Collaborative Filtering) </a></li>
+</ul><!--
 #################################################
 ### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
 #################################################
@@ -14,9 +181,34 @@
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Os-dados">Os dados<a class="anchor-link" href="#Os-dados"> </a></h1><p><img src="/murilo-cunha/images/copied_from_nb/2020-09-11-neural_collaborative_filter/images/matrix_factorization_with_alpha.png" alt="" title="Credit: https://developers.google.com/machine-learning/recommendation/collaborative/basics" /></p>
+<p>Caso esteja rodando o notebook não esqueça de fazer o download das bibliotecas e inicie o <code>tensorboard</code> no background:</p>
+<p>No terminal</p>
+<div class="highlight"><pre><span></span>pip install tensorflow lightfm pandas
+tensorboard --logdir <span class="m">2020</span>-09-11-neural_collaborative_filter/logs
+</pre></div>
+<p>ou no notebook</p>
+<div class="highlight"><pre><span></span><span class="err">!</span><span class="n">pip</span> <span class="n">install</span> <span class="n">tensorflow</span> <span class="n">lightfm</span> <span class="n">pandas</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">tensorboard</span>
+<span class="err">!</span><span class="n">tensorboard</span> <span class="o">--</span><span class="n">logdir</span> <span class="mi">2020</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="n">neural_collaborative_filter</span><span class="o">/</span><span class="n">logs</span> <span class="o">&amp;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Os-dados">
+<a class="anchor" href="#Os-dados" aria-hidden="true"><span class="octicon octicon-link"></span></a>Os dados<a class="anchor-link" href="#Os-dados"> </a>
+</h1>
+<h1 id="https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png">
+<a class="anchor" href="#https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png">https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png</a><a class="anchor-link" href="#https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/avatar.png"> </a>
+</h1>
+<p><img src="https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/2020-09-11-neural_collaborative_filter/matrix_factorization_with_alpha.png" alt="" title="Credit: https://developers.google.com/machine-learning/recommendation/collaborative/basics"></p>
 
 </div>
 </div>
@@ -24,24 +216,7 @@
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
-      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">fetch_movielens</span><span class="p">(</span><span class="n">min_rating</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interaction matrix:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">toarray</span><span class="p">()[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-</p>
-    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -72,29 +247,30 @@
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
+<details class="description">
       <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
+        <p></p>
+<div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;train&quot;</span><span class="p">]:</span>
-    <span class="n">data</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse</span>
+<span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"test"</span><span class="p">,</span> <span class="s2">"train"</span><span class="p">]:</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">dataset</span><span class="p">]</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"int8"</span><span class="p">)</span>
 
 <span class="c1"># Make the ratings binary</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interaction matrix:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Interaction matrix:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">][:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ratings:&quot;</span><span class="p">)</span>
-<span class="n">unique_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Ratings:"</span><span class="p">)</span>
+<span class="n">unique_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">unique_ratings</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
-</p>
+
     </details>
 <div class="output_wrapper">
 <div class="output">
@@ -137,17 +313,17 @@ Ratings:
 
 
 <span class="k">def</span> <span class="nf">wide_to_long</span><span class="p">(</span><span class="n">wide</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">possible_ratings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Go from wide table to long.</span>
+    <span class="sd">"""Go from wide table to long.</span>
 <span class="sd">    :param wide: wide array with user-item interactions</span>
-<span class="sd">    :param possible_ratings: list of possible ratings that we may have.&quot;&quot;&quot;</span>
+<span class="sd">    :param possible_ratings: list of possible ratings that we may have."""</span>
 
     <span class="k">def</span> <span class="nf">_get_ratings</span><span class="p">(</span><span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="n">rating</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Generate long array for the rating provided</span>
+        <span class="sd">"""Generate long array for the rating provided</span>
 <span class="sd">        :param arr: wide array with user-item interactions</span>
-<span class="sd">        :param rating: the rating that we are interested&quot;&quot;&quot;</span>
+<span class="sd">        :param rating: the rating that we are interested"""</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">arr</span> <span class="o">==</span> <span class="n">rating</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
-            <span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int8&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">rating</span><span class="p">)</span>
+            <span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"int8"</span><span class="p">)</span> <span class="o">*</span> <span class="n">rating</span><span class="p">)</span>
         <span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
     <span class="n">long_arrays</span> <span class="o">=</span> <span class="p">[]</span>
@@ -171,8 +347,8 @@ Ratings:
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">long_train</span> <span class="o">=</span> <span class="n">wide_to_long</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">unique_ratings</span><span class="p">)</span>
-<span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">long_train</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;item_id&quot;</span><span class="p">,</span> <span class="s2">&quot;interaction&quot;</span><span class="p">])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">long_train</span> <span class="o">=</span> <span class="n">wide_to_long</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">],</span> <span class="n">unique_ratings</span><span class="p">)</span>
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">long_train</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"item_id"</span><span class="p">,</span> <span class="s2">"interaction"</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -185,22 +361,7 @@ Ratings:
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
-      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All interactions:&quot;</span><span class="p">)</span>
-<span class="n">df_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-</p>
-    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -286,22 +447,7 @@ Ratings:
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
-      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Only positive interactions:&quot;</span><span class="p">)</span>
-<span class="n">df_train</span><span class="p">[</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;interaction&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-</p>
-    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -384,9 +530,14 @@ Ratings:
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="O-modelo-(Neural-Collaborative-Filtering)">O modelo (Neural Collaborative Filtering)<a class="anchor-link" href="#O-modelo-(Neural-Collaborative-Filtering)"> </a></h1><center><img src="2020-09-11-neural_collaborative_filter/images/ncf_all_with_alpha.png" width="70%" url="https://developers.google.com/machine-learning/recommendation/collaborative/basics" description="Fonte: https://developers.google.com/machine-learning/recommendation/collaborative/basics" /> </center>
+<h1 id="O-modelo-(Neural-Collaborative-Filtering)">
+<a class="anchor" href="#O-modelo-(Neural-Collaborative-Filtering)" aria-hidden="true"><span class="octicon octicon-link"></span></a>O modelo (Neural Collaborative Filtering)<a class="anchor-link" href="#O-modelo-(Neural-Collaborative-Filtering)"> </a>
+</h1>
+<center>
+<img src="https://github.com/murilo-cunha/inteligencia-superficial/blob/master/images/2020-09-11-neural_collaborative_filter/ncf_all_with_alpha.png" width="70%" url="https://developers.google.com/machine-learning/recommendation/collaborative/basics" description="Fonte: https://developers.google.com/machine-learning/recommendation/collaborative/basics"> </center>
 </div>
 </div>
 </div>
@@ -419,27 +570,27 @@ Ratings:
     <span class="n">reg_mlp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span>
     <span class="n">dense_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
     <span class="n">reg_layers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
-    <span class="n">activation_dense</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+    <span class="n">activation_dense</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"relu"</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
 
     <span class="c1"># input layer</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
-    <span class="n">item</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;int32&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;item_id&quot;</span><span class="p">)</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"int32"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"user_id"</span><span class="p">)</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">"int32"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"item_id"</span><span class="p">)</span>
 
     <span class="c1"># embedding layers</span>
     <span class="n">mf_user_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="n">number_of_users</span><span class="p">,</span>
         <span class="n">output_dim</span><span class="o">=</span><span class="n">latent_dim_mf</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mf_user_embedding&quot;</span><span class="p">,</span>
-        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">&quot;RandomNormal&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"mf_user_embedding"</span><span class="p">,</span>
+        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">"RandomNormal"</span><span class="p">,</span>
         <span class="n">embeddings_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="n">reg_mf</span><span class="p">),</span>
         <span class="n">input_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">mf_item_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="n">number_of_items</span><span class="p">,</span>
         <span class="n">output_dim</span><span class="o">=</span><span class="n">latent_dim_mf</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mf_item_embedding&quot;</span><span class="p">,</span>
-        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">&quot;RandomNormal&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"mf_item_embedding"</span><span class="p">,</span>
+        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">"RandomNormal"</span><span class="p">,</span>
         <span class="n">embeddings_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="n">reg_mf</span><span class="p">),</span>
         <span class="n">input_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
@@ -447,16 +598,16 @@ Ratings:
     <span class="n">mlp_user_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="n">number_of_users</span><span class="p">,</span>
         <span class="n">output_dim</span><span class="o">=</span><span class="n">latent_dim_mlp</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mlp_user_embedding&quot;</span><span class="p">,</span>
-        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">&quot;RandomNormal&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"mlp_user_embedding"</span><span class="p">,</span>
+        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">"RandomNormal"</span><span class="p">,</span>
         <span class="n">embeddings_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="n">reg_mlp</span><span class="p">),</span>
         <span class="n">input_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">mlp_item_embedding</span> <span class="o">=</span> <span class="n">Embedding</span><span class="p">(</span>
         <span class="n">input_dim</span><span class="o">=</span><span class="n">number_of_items</span><span class="p">,</span>
         <span class="n">output_dim</span><span class="o">=</span><span class="n">latent_dim_mlp</span><span class="p">,</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mlp_item_embedding&quot;</span><span class="p">,</span>
-        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">&quot;RandomNormal&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"mlp_item_embedding"</span><span class="p">,</span>
+        <span class="n">embeddings_initializer</span><span class="o">=</span><span class="s2">"RandomNormal"</span><span class="p">,</span>
         <span class="n">embeddings_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="n">reg_mlp</span><span class="p">),</span>
         <span class="n">input_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
     <span class="p">)</span>
@@ -479,14 +630,14 @@ Ratings:
             <span class="n">dense_layers</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
             <span class="n">activity_regularizer</span><span class="o">=</span><span class="n">l2</span><span class="p">(</span><span class="n">reg_layers</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
             <span class="n">activation</span><span class="o">=</span><span class="n">activation_dense</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;layer</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">"layer</span><span class="si">%d</span><span class="s2">"</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">mlp_vector</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">mlp_vector</span><span class="p">)</span>
 
     <span class="n">predict_layer</span> <span class="o">=</span> <span class="n">Concatenate</span><span class="p">()([</span><span class="n">mf_cat_latent</span><span class="p">,</span> <span class="n">mlp_vector</span><span class="p">])</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span>
-        <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s2">&quot;lecun_uniform&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;interaction&quot;</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">"sigmoid"</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s2">"lecun_uniform"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"interaction"</span>
     <span class="p">)</span>
 
     <span class="n">output</span> <span class="o">=</span> <span class="n">result</span><span class="p">(</span><span class="n">predict_layer</span><span class="p">)</span>
@@ -511,38 +662,39 @@ Ratings:
 <div class="cell border-box-sizing code_cell rendered">
 <details class="description">
       <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
+        <p></p>
+<div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-hide</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
 
-<span class="n">n_users</span><span class="p">,</span> <span class="n">n_items</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">n_users</span><span class="p">,</span> <span class="n">n_items</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
 <span class="n">ncf_model</span> <span class="o">=</span> <span class="n">create_ncf</span><span class="p">(</span><span class="n">n_users</span><span class="p">,</span> <span class="n">n_items</span><span class="p">)</span>
 
 <span class="n">ncf_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
     <span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(),</span>
-    <span class="n">loss</span><span class="o">=</span><span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span>
+    <span class="n">loss</span><span class="o">=</span><span class="s2">"binary_crossentropy"</span><span class="p">,</span>
     <span class="n">metrics</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">TruePositives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;tp&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">FalsePositives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;fp&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">TrueNegatives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;tn&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">FalseNegatives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;fn&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">BinaryAccuracy</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;accuracy&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Precision</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;precision&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Recall</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;recall&quot;</span><span class="p">),</span>
-        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">AUC</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;auc&quot;</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">TruePositives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"tp"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">FalsePositives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"fp"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">TrueNegatives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"tn"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">FalseNegatives</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"fn"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">BinaryAccuracy</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"accuracy"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Precision</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"precision"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Recall</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"recall"</span><span class="p">),</span>
+        <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">AUC</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"auc"</span><span class="p">),</span>
     <span class="p">],</span>
 <span class="p">)</span>
-<span class="n">ncf_model</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;neural_collaborative_filtering&quot;</span>
+<span class="n">ncf_model</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="s2">"neural_collaborative_filtering"</span>
 <span class="n">ncf_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
 </pre></div>
 
     </div>
 </div>
 </div>
-</p>
+
     </details>
 <div class="output_wrapper">
 <div class="output">
@@ -550,7 +702,7 @@ Ratings:
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Model: &#34;neural_collaborative_filtering&#34;
+<pre>Model: "neural_collaborative_filtering"
 __________________________________________________________________________________________________
 Layer (type)                    Output Shape         Param #     Connected to                     
 ==================================================================================================
@@ -617,19 +769,19 @@ ________________________________________________________________________________
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
     <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Make TensorFlow dataset from Pandas DataFrame.</span>
+    <span class="sd">"""Make TensorFlow dataset from Pandas DataFrame.</span>
 <span class="sd">    :param df: input DataFrame - only contains features and target(s)</span>
 <span class="sd">    :param targets: list of columns names corresponding to targets</span>
 <span class="sd">    :param val_split: fraction of the data that should be used for validation</span>
 <span class="sd">    :param batch_size: batch size for training</span>
-<span class="sd">    :param seed: random seed for shuffling the data - setting to `None` will not shuffle the data&quot;&quot;&quot;</span>
+<span class="sd">    :param seed: random seed for shuffling the data - setting to `None` will not shuffle the data"""</span>
 
     <span class="n">n_val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">val_split</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seed</span><span class="p">:</span>
         <span class="c1"># shuffle all the rows</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;series&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">"series"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">&quot;series&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s2">"series"</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
         <span class="n">y</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -655,7 +807,7 @@ ________________________________________________________________________________
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create train and validation datasets</span>
-<span class="n">ds_train</span><span class="p">,</span> <span class="n">ds_val</span> <span class="o">=</span> <span class="n">make_tf_dataset</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;interaction&quot;</span><span class="p">])</span>
+<span class="n">ds_train</span><span class="p">,</span> <span class="n">ds_val</span> <span class="o">=</span> <span class="n">make_tf_dataset</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="p">[</span><span class="s2">"interaction"</span><span class="p">])</span>
 </pre></div>
 
     </div>
@@ -674,10 +826,10 @@ ________________________________________________________________________________
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
 <span class="c1"># define logs and callbacks</span>
-<span class="n">logdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">))</span>
+<span class="n">logdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">"logs"</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">"%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S"</span><span class="p">))</span>
 <span class="n">tensorboard_callback</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">TensorBoard</span><span class="p">(</span><span class="n">logdir</span><span class="p">,</span> <span class="n">histogram_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">early_stopping_callback</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">EarlyStopping</span><span class="p">(</span>
-    <span class="n">monitor</span><span class="o">=</span><span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">monitor</span><span class="o">=</span><span class="s2">"val_loss"</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">0</span>
 <span class="p">)</span>
 
 <span class="n">train_hist</span> <span class="o">=</span> <span class="n">ncf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
@@ -708,7 +860,7 @@ ________________________________________________________________________________
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>/usr/local/anaconda3/envs/inteligencia-superficial/lib/python3.7/site-packages/tensorflow/python/framework/indexed_slices.py:432: UserWarning: Converting sparse IndexedSlices to a dense Tensor of unknown shape. This may consume a large amount of memory.
-  &#34;Converting sparse IndexedSlices to a dense Tensor of unknown shape. &#34;
+  "Converting sparse IndexedSlices to a dense Tensor of unknown shape. "
 </pre>
 </div>
 </div>
@@ -758,9 +910,9 @@ Wall time: 1min 20s
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">long_test</span> <span class="o">=</span> <span class="n">wide_to_long</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span> <span class="n">unique_ratings</span><span class="p">)</span>
-<span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">long_test</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="s2">&quot;item_id&quot;</span><span class="p">,</span> <span class="s2">&quot;interaction&quot;</span><span class="p">])</span>
-<span class="n">ds_test</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">make_tf_dataset</span><span class="p">(</span><span class="n">df_test</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;interaction&quot;</span><span class="p">],</span> <span class="n">val_split</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">long_test</span> <span class="o">=</span> <span class="n">wide_to_long</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">],</span> <span class="n">unique_ratings</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">long_test</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="s2">"item_id"</span><span class="p">,</span> <span class="s2">"interaction"</span><span class="p">])</span>
+<span class="n">ds_test</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">make_tf_dataset</span><span class="p">(</span><span class="n">df_test</span><span class="p">,</span> <span class="p">[</span><span class="s2">"interaction"</span><span class="p">],</span> <span class="n">val_split</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -779,7 +931,7 @@ Wall time: 1min 20s
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
 <span class="n">ncf_predictions</span> <span class="o">=</span> <span class="n">ncf_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">ds_test</span><span class="p">)</span>
-<span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ncf_predictions</span>
+<span class="n">df_test</span><span class="p">[</span><span class="s2">"ncf_predictions"</span><span class="p">]</span> <span class="o">=</span> <span class="n">ncf_predictions</span>
 </pre></div>
 
     </div>
@@ -807,21 +959,7 @@ Wall time: 3.69 s
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
-      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
 
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="n">df_test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-</p>
-    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -905,24 +1043,25 @@ Wall time: 3.69 s
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<details class="description" open="">
+<details class="description">
       <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
-        <p><div class="input">
+        <p></p>
+<div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse-show</span>
-<span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_test</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
-    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;item_id&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;ncf_predictions&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#collapse</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"ncf_predictions"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_test</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">"item_id"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"ncf_predictions"</span>
 <span class="p">)</span><span class="o">.</span><span class="n">values</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neural collaborative filtering predictions&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Neural collaborative filtering predictions"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"ncf_predictions"</span><span class="p">][:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">4</span><span class="p">])</span>
 </pre></div>
 
     </div>
 </div>
 </div>
-</p>
+
     </details>
 <div class="output_wrapper">
 <div class="output">
@@ -961,10 +1100,10 @@ Wall time: 3.69 s
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">precision_ncf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Precision</span><span class="p">(</span><span class="n">top_k</span><span class="o">=</span><span class="n">TOP_K</span><span class="p">)</span>
 <span class="n">recall_ncf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Recall</span><span class="p">(</span><span class="n">top_k</span><span class="o">=</span><span class="n">TOP_K</span><span class="p">)</span>
 
-<span class="n">precision_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">])</span>
-<span class="n">recall_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">])</span>
+<span class="n">precision_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"ncf_predictions"</span><span class="p">])</span>
+<span class="n">recall_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"ncf_predictions"</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -999,25 +1138,25 @@ Wall time: 3.69 s
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
 <span class="c1"># LightFM model</span>
 <span class="n">norm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="n">lightfm_model</span> <span class="o">=</span> <span class="n">LightFM</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;warp&quot;</span><span class="p">)</span>
-<span class="n">lightfm_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]),</span> <span class="n">epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">)</span>
+<span class="n">lightfm_model</span> <span class="o">=</span> <span class="n">LightFM</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">"warp"</span><span class="p">)</span>
+<span class="n">lightfm_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"train"</span><span class="p">]),</span> <span class="n">epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">)</span>
 
 <span class="n">lightfm_predictions</span> <span class="o">=</span> <span class="n">lightfm_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span>
-    <span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;item_id&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">df_test</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">df_test</span><span class="p">[</span><span class="s2">"item_id"</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="p">)</span>
-<span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">lightfm_predictions</span>
+<span class="n">df_test</span><span class="p">[</span><span class="s2">"lightfm_predictions"</span><span class="p">]</span> <span class="o">=</span> <span class="n">lightfm_predictions</span>
 <span class="n">wide_predictions</span> <span class="o">=</span> <span class="n">df_test</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span>
-    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;user_id&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;item_id&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;lightfm_predictions&quot;</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">"user_id"</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">"item_id"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"lightfm_predictions"</span>
 <span class="p">)</span><span class="o">.</span><span class="n">values</span>
-<span class="n">data</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">wide_predictions</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"lightfm_predictions"</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">wide_predictions</span><span class="p">)</span>
 
 <span class="c1"># compute the metrics</span>
 <span class="n">precision_lightfm</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Precision</span><span class="p">(</span><span class="n">top_k</span><span class="o">=</span><span class="n">TOP_K</span><span class="p">)</span>
 <span class="n">recall_lightfm</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">metrics</span><span class="o">.</span><span class="n">Recall</span><span class="p">(</span><span class="n">top_k</span><span class="o">=</span><span class="n">TOP_K</span><span class="p">)</span>
-<span class="n">precision_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">])</span>
-<span class="n">recall_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">])</span>
+<span class="n">precision_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"lightfm_predictions"</span><span class="p">])</span>
+<span class="n">recall_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"test"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"lightfm_predictions"</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">"At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">"</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -1046,3 +1185,46 @@ Wall time: 858 ms
 
 </div>
 
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="murilo-cunha/inteligencia-superficial"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/inteligencia-superficial/demo/neural%20networks/deep%20learning/recommender%20systems/paper/2020/09/11/neural_collaborative_filter.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/inteligencia-superficial/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/inteligencia-superficial/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Inscreva-se</span>
+          </a>
+        </p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Inteligência Superficial</span> de <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/murilo-cunha/inteligencia-superficial" property="cc:attributionName" rel="cc:attributionURL">Murilo Cunha</a> está licenciado com uma Licença <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons - Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional</a>.
+      </div>
+      <!-- <div class="footer-col">
+        <p>Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div> -->
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
