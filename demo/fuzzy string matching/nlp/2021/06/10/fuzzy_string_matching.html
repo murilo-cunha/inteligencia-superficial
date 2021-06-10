@@ -1,0 +1,1435 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Fuzzy string matching | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.1" />
+<meta property="og:title" content="Fuzzy string matching" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Comparando strings e aproximando igualdades" />
+<meta property="og:description" content="Comparando strings e aproximando igualdades" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-10T00:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
+<meta property="twitter:title" content="Fuzzy string matching" />
+<script type="application/ld+json">
+{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","@type":"BlogPosting","headline":"Fuzzy string matching","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/inteligencia-superficial/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" /><link rel="shortcut icon" type="image/x-icon" href="/inteligencia-superficial/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Fuzzy string matching | Inteligência Superficial</title>
+<meta name="generator" content="Jekyll v4.0.1" />
+<meta property="og:title" content="Fuzzy string matching" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Comparando strings e aproximando igualdades" />
+<meta property="og:description" content="Comparando strings e aproximando igualdades" />
+<link rel="canonical" href="https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html" />
+<meta property="og:url" content="https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html" />
+<meta property="og:site_name" content="Inteligência Superficial" />
+<meta property="og:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-06-10T00:00:00-05:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
+<meta property="twitter:title" content="Fuzzy string matching" />
+<script type="application/ld+json">
+{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","@type":"BlogPosting","headline":"Fuzzy string matching","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><div class="wrapper-masthead">
+  <div class="container">
+    <header class="masthead clearfix"><a href="/inteligencia-superficial/" class="site-avatar"><img src="https://murilo-cunha.github.io/inteligencia-superficial/images/avatar.png" /></a><div class="site-info"><h1 class="header-title"><a class="site-title" rel="author site-title-h1" href="/inteligencia-superficial/">Inteligência Superficial</a>
+        </h1>
+        <p class="site-description">Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+        
+        <div class="trigger"><a class="page-link" href="/inteligencia-superficial/sobre/">Sobre</a><a class="page-link" href="/inteligencia-superficial/recursos/">Outros recursos</a><a class="page-link" href="/inteligencia-superficial/pesquisa/">Pesquisa</a><a class="page-link" href="/inteligencia-superficial/categories/">Categorias</a></div>
+      </nav></header>
+  </div>
+</div> 
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Fuzzy string matching</h1><p class="page-description">Comparando strings e aproximando igualdades</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-06-10T00:00:00-05:00" itemprop="datePublished">
+        Jun 10, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      8 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#demo">demo</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#fuzzy string matching">fuzzy string matching</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/inteligencia-superficial/categories/#nlp">nlp</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/murilo-cunha/inteligencia-superficial/tree/master/_notebooks/2021-06-10-fuzzy_string_matching.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/murilo-cunha/inteligencia-superficial/master?filepath=_notebooks%2F2021-06-10-fuzzy_string_matching.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/murilo-cunha/inteligencia-superficial/blob/master/_notebooks/2021-06-10-fuzzy_string_matching.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/inteligencia-superficial/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul id="toc" class="section-nav">
+<li class="toc-entry toc-h1"><a href="#Introdução">Introdução </a></li>
+<li class="toc-entry toc-h1"><a href="#Fuzzy-string-matching">Fuzzy string matching </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#FuzzyWuzzy">FuzzyWuzzy </a></li>
+<li class="toc-entry toc-h2"><a href="#Conectando-datasets">Conectando datasets </a></li>
+<li class="toc-entry toc-h2"><a href="#RapidFuzz">RapidFuzz </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Uma-última-coisa...">Uma última coisa... </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-06-10-fuzzy_string_matching.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Introdução">
+<a class="anchor" href="#Introdu%C3%A7%C3%A3o" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introdução<a class="anchor-link" href="#Introdu%C3%A7%C3%A3o"> </a>
+</h1>
+<p>Várias vezes, nós temos texto como parte dos nossos dados (strings). Em várias aplicações (não só em machine learning), esses dados vem de usuários - quando você preenche um formulário, coloca seu nome, endereço, etc.</p>
+<p>O problema é que muitas pessoas não escrevem os dados igual. Por exemplo, eu ja vi meu nome escrito como <code>murilo</code>, <code>Murilo</code>, <code>murilio</code>, <code>murillo</code>, <code>Murilo</code>, <code>Mr. Murilo</code>, etc. Mas todos essas strings deveriam se referir pra mesma coisa. Como que a gente pode decidir se esses são iguais ou não?</p>
+<h1 id="Fuzzy-string-matching">
+<a class="anchor" href="#Fuzzy-string-matching" aria-hidden="true"><span class="octicon octicon-link"></span></a>Fuzzy string matching<a class="anchor-link" href="#Fuzzy-string-matching"> </a>
+</h1>
+<p><img src="https://media.giphy.com/media/dB1CUdNMPn4aVaISWe/giphy.gif" alt=""></p>
+<p>Os algoritmos que resolvem esse problema se chamam <code>fuzzy string matching</code>, ou aproximações em comparações de strings. Um algoritmo popular é a <a href="https://pt.wikipedia.org/wiki/Dist%C3%A2ncia_Levenshtein">distância Levenshtein</a>, que basicamente vai computando quantas alterações você teria de fazer entre as duas strings. Por exemplo, indo de <code>kitten</code> para <code>sitting</code> (exemplo do <a href="https://pt.wikipedia.org/wiki/Dist%C3%A2ncia_Levenshtein">Wikipedia</a>:</p>
+<p>
+$$kitten \rightarrow \textbf{s}itten\rightarrow sitt\textbf{i}n \rightarrow sittin\textbf{g}$$
+</p>
+<p>A distância Levenshtein nesse caso é 3, porque temos 3 transformações entre a palavra de origem e a palavra de destino:</p>
+<ol>
+<li>Substituição de <code>k</code> por <code>s</code>
+</li>
+<li>Substituição de <code>e</code> por <code>i</code>
+</li>
+<li>inserção de <code>g</code> no final</li>
+</ol>
+<p>E essa é a idéia principal (e passando por cima de alguns detalhes 😅). Simples, né? O algoritmo também é implementado com recursão por eficiência, mas quão efficiente é esse algoritmo? Na vida real (especialmente em machine learning), nós temos muitos dados, então é importante vermos como que esse algoritmo escala. Isso é, quanto tempo demora/quanta memória vamos usar enquando o volume de dados aumenta?</p>
+<h2 id="FuzzyWuzzy">
+<a class="anchor" href="#FuzzyWuzzy" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>FuzzyWuzzy</code><a class="anchor-link" href="#FuzzyWuzzy"> </a>
+</h2>
+<p><code>FuzzyWuzzy</code> é uma biblioteca em python (bem popular) que implementa esse algoritmo. Além disso, o pacote também oferece uma versão mais rápida que faz algumas aproximações. Vamos ver como funciona o API.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># exemplo da documentação da biblioteca</span>
+<span class="kn">from</span> <span class="nn">fuzzywuzzy</span> <span class="kn">import</span> <span class="n">fuzz</span><span class="p">,</span> <span class="n">process</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Atlanta Falcons"</span><span class="p">,</span> <span class="s2">"New York Jets"</span><span class="p">,</span> <span class="s2">"New York Giants"</span><span class="p">,</span> <span class="s2">"Dallas Cowboys"</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> process.extract("new york jets", choices, limit=2)  # só pra registrar o tempo
+<span class="n">process</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"new york jets"</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>89.3 µs ± 1.1 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[('New York Jets', 100), ('New York Giants', 79)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> process.extractOne("cowboys", choices)  # só pra registrar o tempo
+<span class="n">process</span><span class="o">.</span><span class="n">extractOne</span><span class="p">(</span><span class="s2">"cowboys"</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>191 µs ± 1.45 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>('Dallas Cowboys', 90)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>E é isso! Mas mais uma vez, quanto tempo será que demora quando temos mais dados? Vamos ver.</p>
+<h2 id="Conectando-datasets">
+<a class="anchor" href="#Conectando-datasets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conectando datasets<a class="anchor-link" href="#Conectando-datasets"> </a>
+</h2>
+<p>Um outro caso que é importante é quando temos dois datasets (tabelas nesse caso), algumas colunas tem os mesmos dados, mas elas estão escritos de maneiras diferentes! Ou então, quando os dados se repetem, e temos que deduplicar os dados. Isso acontece por exemplo quando o usuário se registra mas coloca um email ou nome errado, então preenche o formulário de novo. Vamos ver um exemplo.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">recordlinkage.datasets</span> <span class="kn">import</span> <span class="n">load_febrl1</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_febrl1</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>given_name</th>
+      <th>surname</th>
+      <th>street_number</th>
+      <th>address_1</th>
+      <th>address_2</th>
+      <th>suburb</th>
+      <th>postcode</th>
+      <th>state</th>
+      <th>date_of_birth</th>
+      <th>soc_sec_id</th>
+    </tr>
+    <tr>
+      <th>rec_id</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>rec-223-org</th>
+      <td>NaN</td>
+      <td>waller</td>
+      <td>6</td>
+      <td>tullaroop street</td>
+      <td>willaroo</td>
+      <td>st james</td>
+      <td>4011</td>
+      <td>wa</td>
+      <td>19081209</td>
+      <td>6988048</td>
+    </tr>
+    <tr>
+      <th>rec-122-org</th>
+      <td>lachlan</td>
+      <td>berry</td>
+      <td>69</td>
+      <td>giblin street</td>
+      <td>killarney</td>
+      <td>bittern</td>
+      <td>4814</td>
+      <td>qld</td>
+      <td>19990219</td>
+      <td>7364009</td>
+    </tr>
+    <tr>
+      <th>rec-373-org</th>
+      <td>deakin</td>
+      <td>sondergeld</td>
+      <td>48</td>
+      <td>goldfinch circuit</td>
+      <td>kooltuo</td>
+      <td>canterbury</td>
+      <td>2776</td>
+      <td>vic</td>
+      <td>19600210</td>
+      <td>2635962</td>
+    </tr>
+    <tr>
+      <th>rec-10-dup-0</th>
+      <td>kayla</td>
+      <td>harrington</td>
+      <td>NaN</td>
+      <td>maltby circuit</td>
+      <td>coaling</td>
+      <td>coolaroo</td>
+      <td>3465</td>
+      <td>nsw</td>
+      <td>19150612</td>
+      <td>9004242</td>
+    </tr>
+    <tr>
+      <th>rec-227-org</th>
+      <td>luke</td>
+      <td>purdon</td>
+      <td>23</td>
+      <td>ramsay place</td>
+      <td>mirani</td>
+      <td>garbutt</td>
+      <td>2260</td>
+      <td>vic</td>
+      <td>19831024</td>
+      <td>8099933</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Vamos focar no nome completo, ou seja o <code>given_name</code> e <code>surname</code></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># collapse</span>
+<span class="n">df</span><span class="p">[[</span><span class="s2">"given_name"</span><span class="p">,</span> <span class="s2">"surname"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"given_name"</span><span class="p">,</span> <span class="s2">"surname"</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">"full_name"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"given_name"</span><span class="p">]</span> <span class="o">+</span> <span class="s2">" "</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s2">"surname"</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"full_name"</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rec_id</th>
+      <th>full_name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rec-223-org</td>
+      <td>waller</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rec-122-org</td>
+      <td>lachlan berry</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>rec-373-org</td>
+      <td>deakin sondergeld</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>rec-10-dup-0</td>
+      <td>kayla harrington</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>rec-227-org</td>
+      <td>luke purdon</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Vamos fazer todas as comparações possíveis! Esse dataset tem só 500 entradas então não tem muito problema</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># collapse</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"cross"</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+    <span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+<span class="p">)</span>  <span class="c1"># cria todas as combinações e depois mistura as linhas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"full_name_x"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"full_name_y"</span><span class="p">]</span>
+<span class="p">]</span>  <span class="c1"># vamos retirar as que são exatamente iguais</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"rec_id_x"</span><span class="p">,</span> <span class="s2">"rec_id_y"</span><span class="p">,</span> <span class="s2">"full_name_x"</span><span class="p">,</span> <span class="s2">"full_name_y"</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span>
+    <span class="n">drop</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>  <span class="c1"># reorganizando as colunas</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">"names"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+    <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"full_name_x"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"full_name_y"</span><span class="p">])</span>
+<span class="p">)</span>  <span class="c1"># criando a coluna pra comparar os nomes</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rec_id_x</th>
+      <th>rec_id_y</th>
+      <th>full_name_x</th>
+      <th>full_name_y</th>
+      <th>names</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rec-498-dup-0</td>
+      <td>rec-372-dup-0</td>
+      <td>claire crook</td>
+      <td>talia ho</td>
+      <td>(claire crook, talia ho)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rec-484-org</td>
+      <td>rec-220-org</td>
+      <td>jacynta hoffman</td>
+      <td>tyler heerey</td>
+      <td>(jacynta hoffman, tyler heerey)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>rec-410-dup-0</td>
+      <td>rec-261-dup-0</td>
+      <td>sachin connerty</td>
+      <td>wilde</td>
+      <td>(sachin connerty,  wilde)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>rec-54-org</td>
+      <td>rec-246-dup-0</td>
+      <td>emiily morrison</td>
+      <td>burford jack</td>
+      <td>(emiily morrison, burford jack)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>rec-370-dup-0</td>
+      <td>rec-386-dup-0</td>
+      <td>rourke webv</td>
+      <td>dylan dolby</td>
+      <td>(rourke webv, dylan dolby)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>E agora podemos computar o algoritmo!</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">"fuzzywuzzy"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"names"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 2.94 s, sys: 59.6 ms, total: 3 s
+Wall time: 3.03 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rec_id_x</th>
+      <th>rec_id_y</th>
+      <th>full_name_x</th>
+      <th>full_name_y</th>
+      <th>names</th>
+      <th>fuzzywuzzy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rec-498-dup-0</td>
+      <td>rec-372-dup-0</td>
+      <td>claire crook</td>
+      <td>talia ho</td>
+      <td>(claire crook, talia ho)</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rec-484-org</td>
+      <td>rec-220-org</td>
+      <td>jacynta hoffman</td>
+      <td>tyler heerey</td>
+      <td>(jacynta hoffman, tyler heerey)</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>rec-410-dup-0</td>
+      <td>rec-261-dup-0</td>
+      <td>sachin connerty</td>
+      <td>wilde</td>
+      <td>(sachin connerty,  wilde)</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>rec-54-org</td>
+      <td>rec-246-dup-0</td>
+      <td>emiily morrison</td>
+      <td>burford jack</td>
+      <td>(emiily morrison, burford jack)</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>rec-370-dup-0</td>
+      <td>rec-386-dup-0</td>
+      <td>rourke webv</td>
+      <td>dylan dolby</td>
+      <td>(rourke webv, dylan dolby)</td>
+      <td>18</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Para a nossa tabela com 998512 linhas, o algoritmo demorou 2.9 segundos. Nada mal. E as comparações parecem boas! Alguns exemplos de igualdade:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[[</span><span class="s2">"full_name_x"</span><span class="p">,</span> <span class="s2">"full_name_y"</span><span class="p">,</span> <span class="s2">"fuzzywuzzy"</span><span class="p">]]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">by</span><span class="o">=</span><span class="s2">"fuzzywuzzy"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>full_name_x</th>
+      <th>full_name_y</th>
+      <th>fuzzywuzzy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>926629</th>
+      <td>charldotte campbell</td>
+      <td>charlotte campbell</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>463495</th>
+      <td>lucas rawldings</td>
+      <td>lucas rawlings</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>890513</th>
+      <td>john van't hof</td>
+      <td>john van'wt hof</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>969177</th>
+      <td>jaden humphkreys</td>
+      <td>jaden humphreys</td>
+      <td>97</td>
+    </tr>
+    <tr>
+      <th>680776</th>
+      <td>kirah mccarthy</td>
+      <td>kirrah mccarthy</td>
+      <td>97</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>E alguns exemplos de desigualdade:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[[</span><span class="s2">"full_name_x"</span><span class="p">,</span> <span class="s2">"full_name_y"</span><span class="p">,</span> <span class="s2">"fuzzywuzzy"</span><span class="p">]]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span>
+    <span class="n">by</span><span class="o">=</span><span class="s2">"fuzzywuzzy"</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>full_name_x</th>
+      <th>full_name_y</th>
+      <th>fuzzywuzzy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>689287</th>
+      <td>ruby riding</td>
+      <td>takeisha smallacombe</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>585410</th>
+      <td>timothy mccarthy</td>
+      <td>annablle kounis</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>232904</th>
+      <td>jacynta hoffman</td>
+      <td>brooke durbridge</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>775239</th>
+      <td>annablle kounis</td>
+      <td>timothy mccarthy</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>148505</th>
+      <td>brooke durbridge</td>
+      <td>jacynta hoffman</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Vamos olhar o tempo mais de perto... Será que a gente poderia melhorar isso?</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> df["names"].apply(lambda x: fuzz.ratio(x[0], x[1]))
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>2.99 s ± 44.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="RapidFuzz">
+<a class="anchor" href="#RapidFuzz" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>RapidFuzz</code><a class="anchor-link" href="#RapidFuzz"> </a>
+</h2>
+<p><code>RapidFuzz</code> é uma outra biblioteca em python. Mais nova, que tem algumas pequenas diferenças:</p>
+<ul>
+<li>A liçensa que eles estão usando é mais permissiva. Aqui você está livre pra usar qualquer liçensa no seu projeto (no <code>FuzzyWuzzy</code> você era obrigado a usar uma liçensa GPL). Não muito interessante 🥱</li>
+<li>É mais rapida! Tem algumas melhorias na parte da implementação do algoritmo mas também é implementada em C++!!⚡️⚡️</li>
+</ul>
+<p><img src="https://media.giphy.com/media/HdcimOKferlkI/giphy.gif" alt=""></p>
+<p>O quão mais rápida? Vamos ver.</p>
+<p>Usando a mesma estratégia de antes:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># usando os mesmo exemplos do início (e também na biblioteca)</span>
+<span class="kn">from</span> <span class="nn">rapidfuzz</span> <span class="kn">import</span> <span class="n">fuzz</span><span class="p">,</span> <span class="n">process</span>
+
+<span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Atlanta Falcons"</span><span class="p">,</span> <span class="s2">"New York Jets"</span><span class="p">,</span> <span class="s2">"New York Giants"</span><span class="p">,</span> <span class="s2">"Dallas Cowboys"</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> process.extract("new york jets", choices, limit=2)  # só pra registrar o tempo
+<span class="n">process</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"new york jets"</span><span class="p">,</span> <span class="n">choices</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>8.23 µs ± 173 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[('New York Jets', 100.0, 1), ('New York Giants', 78.57142857142857, 2)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> process.extractOne("cowboys", choices) # só pra registrar o tempo
+<span class="n">process</span><span class="o">.</span><span class="n">extractOne</span><span class="p">(</span><span class="s2">"cowboys"</span><span class="p">,</span> <span class="n">choices</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>14.4 µs ± 236 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>('Dallas Cowboys', 90.0, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Antes o código demorou 89.3µs e 191µs, respectivamente. Agora, demoramos 8.23µs e 14.4µs (<strong>&lt;10%</strong> do tempo de antes)! Mas como escala? Vamos de novo olhar pro exemplo da deduplicação de dados:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">"rapidfuzz"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"names"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fuzz</span><span class="o">.</span><span class="n">ratio</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 419 ms, sys: 26.7 ms, total: 445 ms
+Wall time: 449 ms
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>rec_id_x</th>
+      <th>rec_id_y</th>
+      <th>full_name_x</th>
+      <th>full_name_y</th>
+      <th>names</th>
+      <th>fuzzywuzzy</th>
+      <th>RapidFuzz</th>
+      <th>rapidfuzz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>rec-498-dup-0</td>
+      <td>rec-372-dup-0</td>
+      <td>claire crook</td>
+      <td>talia ho</td>
+      <td>(claire crook, talia ho)</td>
+      <td>40</td>
+      <td>40.000000</td>
+      <td>40.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>rec-484-org</td>
+      <td>rec-220-org</td>
+      <td>jacynta hoffman</td>
+      <td>tyler heerey</td>
+      <td>(jacynta hoffman, tyler heerey)</td>
+      <td>22</td>
+      <td>22.222222</td>
+      <td>22.222222</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>rec-410-dup-0</td>
+      <td>rec-261-dup-0</td>
+      <td>sachin connerty</td>
+      <td>wilde</td>
+      <td>(sachin connerty,  wilde)</td>
+      <td>19</td>
+      <td>19.047619</td>
+      <td>19.047619</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>rec-54-org</td>
+      <td>rec-246-dup-0</td>
+      <td>emiily morrison</td>
+      <td>burford jack</td>
+      <td>(emiily morrison, burford jack)</td>
+      <td>15</td>
+      <td>14.814815</td>
+      <td>14.814815</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>rec-370-dup-0</td>
+      <td>rec-386-dup-0</td>
+      <td>rourke webv</td>
+      <td>dylan dolby</td>
+      <td>(rourke webv, dylan dolby)</td>
+      <td>18</td>
+      <td>18.181818</td>
+      <td>18.181818</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>E os resultados dos dois algoritmos são exatamente iguais! (Com a pequena excessão que o <code>FuzzyWuzzy</code> retorna números inteiros e o <code>RapidFuzz</code> retorna frações)</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> df["names"].apply(lambda x: fuzz.ratio(x[0], x[1]))
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>445 ms ± 25 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Menos 15% do tempo de antes!! Só trocando a biblioteca!</p>
+<p><img src="https://media.giphy.com/media/w9xG5hsxZlqtevPlJQ/giphy.gif" alt=""></p>
+<p>Além disso a documentação faz mais comparações pra diferentes tarefas e como são os números com a maior quantidade de dados.</p>
+<p><img src="https://raw.githubusercontent.com/maxbachmann/RapidFuzz/main/docs/img/scorer.svg?sanitize=true" alt="numero de pares de palavras comparadas por segundo"></p>
+<p>Pra mais gráficos, fica a <a href="https://maxbachmann.github.io/RapidFuzz/fuzz.html">documentação</a>.</p>
+<h1 id="Uma-última-coisa...">
+<a class="anchor" href="#Uma-%C3%BAltima-coisa..." aria-hidden="true"><span class="octicon octicon-link"></span></a>Uma última coisa...<a class="anchor-link" href="#Uma-%C3%BAltima-coisa..."> </a>
+</h1>
+<blockquote>
+<p>A gente pode melhorar isso ainda mais quando quisermos deduplicar linhas na minha tabela?</p>
+</blockquote>
+<p>Sim. Mas não na parte algoritmica. Na vida real, temos também de sermos espertos na hora de computar as coisas. Se estivermos comparando endereços por exemplo, a rua e número talvez estejam diferentes, mas a cidade e estado provavelmente não, especialmente porque numa grande parte esses vem de um dropdown, então os dados vem "limpos".</p>
+<p>Nesses casos, ao invés de criar todas as combinações possiveis, a gente pode criar as combinações dentro de cada grupo - no nosso exemplo quando os estados e cidades são iguais. Reduzindo o número de combinações já reduz bastante o trabalho. E na maioria dos casos, é <strong>ai</strong> que temos os maiores ganhos. E ainda por cima, existem bibliotecas como o <code>Record Linkage Toolkit</code> que são feitos exatamente pra isso.
+Ou seja, as vezes é melhor sentar e pensar antes de ficar quebrando a cabeça em como otimizar um algoritmo. 😇</p>
+<p><img src="https://media.giphy.com/media/mRh4cLIYhrs9G/giphy.gif" alt=""></p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="murilo-cunha/inteligencia-superficial"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/inteligencia-superficial/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/inteligencia-superficial/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Inscreva-se</span>
+          </a>
+        </p>
+        <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Licença Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Inteligência Superficial</span> de <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/murilo-cunha/inteligencia-superficial" property="cc:attributionName" rel="cc:attributionURL">Murilo Cunha</a> está licenciado com uma Licença <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons - Atribuição-NãoComercial-CompartilhaIgual 4.0 Internacional</a>.
+      </div>
+      <!-- <div class="footer-col">
+        <p>Mergulhando de cabeça em inteligência artificial e machine learning</p>
+      </div> -->
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://www.linkedin.com/in/murilo-cunha" title="murilo-cunha"><svg class="svg-icon grey"><use xlink:href="/inteligencia-superficial/assets/minima-social-icons.svg#linkedin"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
