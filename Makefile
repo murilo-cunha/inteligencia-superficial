@@ -48,4 +48,14 @@ bash-jekyll: .FORCE
 restart-jekyll: .FORCE
 	docker-compose restart jekyll
 
+# flake8 linting and black, isort code style with nbQA for notebooks
+lint-notebooks:
+	@echo ">>> lint notebooks"
+	@echo ">>> black notebooks"
+	nbqa black _notebooks
+	@echo ">>> isort notebooks"
+	nbqa isort _notebooks
+	@echo ">>> linting files"
+	nbqa flake8 _notebooks
+
 .FORCE:

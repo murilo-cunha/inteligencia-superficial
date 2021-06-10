@@ -1,0 +1,16 @@
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+
+[tool.nbqa.mutate]
+black = 1
+isort = 1
+
+[tool.nbqa.addopts]
+flake8 = [
+    "--ignore=E402"
+]
+
+[tool.nbqa.files]
+isort = "^_notebooks/"
+black = "^_notebooks/"
