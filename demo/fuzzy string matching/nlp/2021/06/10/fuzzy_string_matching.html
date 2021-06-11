@@ -19,7 +19,7 @@
 <meta property="twitter:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
 <meta property="twitter:title" content="Fuzzy string matching" />
 <script type="application/ld+json">
-{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","@type":"BlogPosting","headline":"Fuzzy string matching","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
+{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","headline":"Fuzzy string matching","@type":"BlogPosting","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/inteligencia-superficial/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://murilo-cunha.github.io/inteligencia-superficial/feed.xml" title="Inteligência Superficial" /><link rel="shortcut icon" type="image/x-icon" href="/inteligencia-superficial/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.7.1 -->
 <title>Fuzzy string matching | Inteligência Superficial</title>
@@ -38,7 +38,7 @@
 <meta property="twitter:image" content="https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif" />
 <meta property="twitter:title" content="Fuzzy string matching" />
 <script type="application/ld+json">
-{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","@type":"BlogPosting","headline":"Fuzzy string matching","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
+{"description":"Comparando strings e aproximando igualdades","image":"https://www.the-automator.com/wp-content/uploads/2016/01/fuzzy.gif","headline":"Fuzzy string matching","@type":"BlogPosting","dateModified":"2021-06-10T00:00:00-05:00","datePublished":"2021-06-10T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html"},"url":"https://murilo-cunha.github.io/inteligencia-superficial/demo/fuzzy%20string%20matching/nlp/2021/06/10/fuzzy_string_matching.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -1076,7 +1076,7 @@ Wall time: 3.03 s
 </h2>
 <p><code>RapidFuzz</code> é uma outra biblioteca em python. Mais nova, que tem algumas pequenas diferenças:</p>
 <ul>
-<li>A liçensa que eles estão usando é mais permissiva. Aqui você está livre pra usar qualquer liçensa no seu projeto (no <code>FuzzyWuzzy</code> você era obrigado a usar uma liçensa GPL). Não muito interessante 🥱</li>
+<li>A licença que eles estão usando é mais permissiva. Aqui você está livre pra usar qualquer licença no seu projeto (no <code>FuzzyWuzzy</code> você era obrigado a usar uma licença GPL). Não muito interessante 🥱</li>
 <li>É mais rapida! Tem algumas melhorias na parte da implementação do algoritmo mas também é implementada em C++!!⚡️⚡️</li>
 </ul>
 <p><img src="https://media.giphy.com/media/HdcimOKferlkI/giphy.gif" alt=""></p>
@@ -1380,7 +1380,7 @@ Wall time: 449 ms
 <blockquote>
 <p>A gente pode melhorar isso ainda mais quando quisermos deduplicar linhas na minha tabela?</p>
 </blockquote>
-<p>Sim. Mas não na parte algoritmica. Na vida real, temos também de sermos espertos na hora de computar as coisas. Se estivermos comparando endereços por exemplo, a rua e número talvez estejam diferentes, mas a cidade e estado provavelmente não, especialmente porque numa grande parte esses vem de um dropdown, então os dados vem "limpos".</p>
+<p>Sim. Mas não na parte algoritmica. Na vida real, temos também de ser espertos na hora de computar as coisas. Se estivermos comparando endereços por exemplo, a rua e número talvez estejam diferentes, mas a cidade e estado provavelmente não, especialmente porque numa grande parte esses vem de um dropdown, então os dados vem "limpos".</p>
 <p>Nesses casos, ao invés de criar todas as combinações possiveis, a gente pode criar as combinações dentro de cada grupo - no nosso exemplo quando os estados e cidades são iguais. Reduzindo o número de combinações já reduz bastante o trabalho. E na maioria dos casos, é <strong>ai</strong> que temos os maiores ganhos. E ainda por cima, existem bibliotecas como o <code>Record Linkage Toolkit</code> que são feitos exatamente pra isso.
 Ou seja, as vezes é melhor sentar e pensar antes de ficar quebrando a cabeça em como otimizar um algoritmo. 😇</p>
 <p><img src="https://media.giphy.com/media/mRh4cLIYhrs9G/giphy.gif" alt=""></p>
