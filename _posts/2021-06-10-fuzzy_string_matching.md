@@ -89,7 +89,7 @@ $$kitten \rightarrow \textbf{s}itten\rightarrow sitt\textbf{i}n \rightarrow sitt
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>89.3 µs ± 1.1 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+<pre>87.4 µs ± 2.49 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
 </pre>
 </div>
 </div>
@@ -131,7 +131,7 @@ $$kitten \rightarrow \textbf{s}itten\rightarrow sitt\textbf{i}n \rightarrow sitt
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>191 µs ± 1.45 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
+<pre>176 µs ± 1.15 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)
 </pre>
 </div>
 </div>
@@ -155,7 +155,7 @@ $$kitten \rightarrow \textbf{s}itten\rightarrow sitt\textbf{i}n \rightarrow sitt
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>E é isso! Mas mais uma vez, quanto tempo será que demora quando temos mais dados? Vamos ver.</p>
-<h2 id="Conectando-datasets">Conectando datasets<a class="anchor-link" href="#Conectando-datasets"> </a></h2><p>Um outro caso que é importante é quando temos dois datasets (tabelas nesse caso), algumas colunas tem os mesmos dados, mas elas estão escritos de maneiras diferentes! Ou então, quando os dados se repetem, e temos que deduplicar os dados. Isso acontece por exemplo quando o usuário se registra mas coloca um email ou nome errado, então preenche o formulário de novo. Vamos ver um exemplo.</p>
+<h2 id="Conectando-ou-deduplicando-datasets">Conectando ou deduplicando datasets<a class="anchor-link" href="#Conectando-ou-deduplicando-datasets"> </a></h2><p>Um outro caso que é importante é quando temos dois datasets (tabelas nesse caso), algumas colunas tem os mesmos dados, mas elas estão escritos de maneiras diferentes! Ou então, quando os dados se repetem, e temos que deduplicar os dados. Isso acontece por exemplo quando o usuário se registra mas coloca um email ou nome errado, então preenche o formulário de novo. Vamos ver um exemplo.</p>
 
 </div>
 </div>
@@ -555,8 +555,8 @@ $$kitten \rightarrow \textbf{s}itten\rightarrow sitt\textbf{i}n \rightarrow sitt
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 2.94 s, sys: 59.6 ms, total: 3 s
-Wall time: 3.03 s
+<pre>CPU times: user 2.76 s, sys: 40.3 ms, total: 2.8 s
+Wall time: 2.81 s
 </pre>
 </div>
 </div>
@@ -871,7 +871,7 @@ Wall time: 3.03 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>2.99 s ± 44.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>2.75 s ± 32.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -886,7 +886,7 @@ Wall time: 3.03 s
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="RapidFuzz"><code>RapidFuzz</code><a class="anchor-link" href="#RapidFuzz"> </a></h2><p><code>RapidFuzz</code> é uma outra biblioteca em python. Mais nova, que tem algumas pequenas diferenças:</p>
 <ul>
-<li>A liçensa que eles estão usando é mais permissiva. Aqui você está livre pra usar qualquer liçensa no seu projeto (no <code>FuzzyWuzzy</code> você era obrigado a usar uma liçensa GPL). Não muito interessante 🥱</li>
+<li>A licença que eles estão usando é mais permissiva. Aqui você está livre pra usar qualquer licença no seu projeto (no <code>FuzzyWuzzy</code> você era obrigado a usar uma licença GPL). Não muito interessante 🥱</li>
 <li>É mais rapida! Tem algumas melhorias na parte da implementação do algoritmo mas também é implementada em C++!!⚡️⚡️</li>
 </ul>
 <p><img src="https://media.giphy.com/media/HdcimOKferlkI/giphy.gif" alt=""></p>
@@ -904,7 +904,7 @@ Wall time: 3.03 s
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># usando os mesmo exemplos do início (e também na biblioteca)</span>
-<span class="kn">from</span> <span class="nn">rapidfuzz</span> <span class="kn">import</span> <span class="n">fuzz</span><span class="p">,</span> <span class="n">process</span>
+<span class="kn">from</span> <span class="nn">rapidfuzz</span> <span class="kn">import</span> <span class="n">fuzz</span><span class="p">,</span> <span class="n">process</span>  <span class="c1"># noqa: F811</span>
 
 <span class="n">choices</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Atlanta Falcons&quot;</span><span class="p">,</span> <span class="s2">&quot;New York Jets&quot;</span><span class="p">,</span> <span class="s2">&quot;New York Giants&quot;</span><span class="p">,</span> <span class="s2">&quot;Dallas Cowboys&quot;</span><span class="p">]</span>
 </pre></div>
@@ -937,7 +937,7 @@ Wall time: 3.03 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>8.23 µs ± 173 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<pre>7.68 µs ± 200 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre>
 </div>
 </div>
@@ -979,7 +979,7 @@ Wall time: 3.03 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>14.4 µs ± 236 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+<pre>13.6 µs ± 250 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
 </pre>
 </div>
 </div>
@@ -1029,8 +1029,8 @@ Wall time: 3.03 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 419 ms, sys: 26.7 ms, total: 445 ms
-Wall time: 449 ms
+<pre>CPU times: user 385 ms, sys: 30.4 ms, total: 416 ms
+Wall time: 415 ms
 </pre>
 </div>
 </div>
@@ -1063,7 +1063,6 @@ Wall time: 449 ms
       <th>full_name_y</th>
       <th>names</th>
       <th>fuzzywuzzy</th>
-      <th>RapidFuzz</th>
       <th>rapidfuzz</th>
     </tr>
   </thead>
@@ -1077,7 +1076,6 @@ Wall time: 449 ms
       <td>(claire crook, talia ho)</td>
       <td>40</td>
       <td>40.000000</td>
-      <td>40.000000</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1087,7 +1085,6 @@ Wall time: 449 ms
       <td>tyler heerey</td>
       <td>(jacynta hoffman, tyler heerey)</td>
       <td>22</td>
-      <td>22.222222</td>
       <td>22.222222</td>
     </tr>
     <tr>
@@ -1099,7 +1096,6 @@ Wall time: 449 ms
       <td>(sachin connerty,  wilde)</td>
       <td>19</td>
       <td>19.047619</td>
-      <td>19.047619</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1110,7 +1106,6 @@ Wall time: 449 ms
       <td>(emiily morrison, burford jack)</td>
       <td>15</td>
       <td>14.814815</td>
-      <td>14.814815</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1120,7 +1115,6 @@ Wall time: 449 ms
       <td>dylan dolby</td>
       <td>(rourke webv, dylan dolby)</td>
       <td>18</td>
-      <td>18.181818</td>
       <td>18.181818</td>
     </tr>
   </tbody>
@@ -1163,7 +1157,7 @@ Wall time: 449 ms
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>445 ms ± 25 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>402 ms ± 5.89 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -1183,7 +1177,7 @@ Wall time: 449 ms
 <p>Pra mais gráficos, fica a <a href="https://maxbachmann.github.io/RapidFuzz/fuzz.html">documentação</a>.</p>
 <h1 id="Uma-&#250;ltima-coisa...">Uma &#250;ltima coisa...<a class="anchor-link" href="#Uma-&#250;ltima-coisa..."> </a></h1><blockquote><p>A gente pode melhorar isso ainda mais quando quisermos deduplicar linhas na minha tabela?</p>
 </blockquote>
-<p>Sim. Mas não na parte algoritmica. Na vida real, temos também de sermos espertos na hora de computar as coisas. Se estivermos comparando endereços por exemplo, a rua e número talvez estejam diferentes, mas a cidade e estado provavelmente não, especialmente porque numa grande parte esses vem de um dropdown, então os dados vem "limpos".</p>
+<p>Sim. Mas não na parte algoritmica. Na vida real, temos também de ser espertos na hora de computar as coisas. Se estivermos comparando endereços por exemplo, a rua e número talvez estejam diferentes, mas a cidade e estado provavelmente não, especialmente porque numa grande parte esses vem de um dropdown, então os dados vem "limpos".</p>
 <p>Nesses casos, ao invés de criar todas as combinações possiveis, a gente pode criar as combinações dentro de cada grupo - no nosso exemplo quando os estados e cidades são iguais. Reduzindo o número de combinações já reduz bastante o trabalho. E na maioria dos casos, é <strong>ai</strong> que temos os maiores ganhos. E ainda por cima, existem bibliotecas como o <code>Record Linkage Toolkit</code> que são feitos exatamente pra isso.
 Ou seja, as vezes é melhor sentar e pensar antes de ficar quebrando a cabeça em como otimizar um algoritmo. 😇</p>
 <p><img src="https://media.giphy.com/media/mRh4cLIYhrs9G/giphy.gif" alt=""></p>

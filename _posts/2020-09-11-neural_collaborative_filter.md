@@ -601,7 +601,7 @@ ________________________________________________________________________________
 <span class="sd">    :param targets: list of columns names corresponding to targets</span>
 <span class="sd">    :param val_split: fraction of the data that should be used for validation</span>
 <span class="sd">    :param batch_size: batch size for training</span>
-<span class="sd">    :param seed: random seed for shuffling the data - setting to `None` will not shuffle the data&quot;&quot;&quot;</span>
+<span class="sd">    :param seed: random seed for shuffling data - `None` won&#39;t shuffle the data&quot;&quot;&quot;</span>
 
     <span class="n">n_val</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">val_split</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">seed</span><span class="p">:</span>
@@ -929,7 +929,8 @@ Wall time: 3.69 s
 <span class="n">precision_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">])</span>
 <span class="n">recall_ncf</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;ncf_predictions&quot;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_ncf</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;and a recall of {recall_ncf.result().numpy():.5f}&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 
@@ -963,7 +964,11 @@ Wall time: 3.69 s
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
 <span class="c1"># LightFM model</span>
-<span class="n">norm</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">norm</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Normalize vector&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">ptp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
 <span class="n">lightfm_model</span> <span class="o">=</span> <span class="n">LightFM</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;warp&quot;</span><span class="p">)</span>
 <span class="n">lightfm_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]),</span> <span class="n">epochs</span><span class="o">=</span><span class="n">N_EPOCHS</span><span class="p">)</span>
 
@@ -982,7 +987,8 @@ Wall time: 3.69 s
 <span class="n">precision_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">])</span>
 <span class="n">recall_lightfm</span><span class="o">.</span><span class="n">update_state</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;lightfm_predictions&quot;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2"> and a recall of </span><span class="si">{</span><span class="n">recall_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;At K = </span><span class="si">{</span><span class="n">TOP_K</span><span class="si">}</span><span class="s2">, we have a precision of </span><span class="si">{</span><span class="n">precision_lightfm</span><span class="o">.</span><span class="n">result</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">:</span><span class="s2">.5f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;and a recall of {recall_lightfm.result().numpy():.5f}&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 
